@@ -1,0 +1,25 @@
+name: flutter_con_game
+description: A simple Flame game.
+version: 0.1.0
+
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flame_audio: 1.4.0
+  flame: 1.6.0
+
+dev_dependencies:
+  flame_test: 1.9.2
+  flame_lint: 0.2.0
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: false
