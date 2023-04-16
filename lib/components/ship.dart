@@ -1,29 +1,30 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_con_game/components/bullet.dart';
 import 'package:flutter_con_game/main.dart';
 import 'package:flutter_con_game/utils/keyboard_handler_utils.dart';
 
-class Ship extends PositionComponent with KeyboardHandler, HasGameRef<MyGame> {
+class Ship extends RectangleComponent
+    with KeyboardHandler, HasGameReference<MyGame> {
   static final _paint = BasicPalette.cyan.paint();
   static const _engine = 25.0;
   static const _drag = 5.0;
-  static const _bullet = 50.0;
+  static const _bullet = 300.0;
 
-  Vector2 velocity = Vector2.zero();
+  Ship() : super(size: Vector2.all(10), anchor: Anchor.center, paint: _paint);
 
-  Vector2 move = Vector2.zero();
-  Vector2 shoot = Vector2.zero();
+  final Vector2 velocity = Vector2.zero();
+  final Vector2 drag = Vector2.zero();
+  final Vector2 engine = Vector2.zero();
+  final Vector2 acceleration = Vector2.zero();
+
+  final Vector2 move = Vector2.zero();
+  final Vector2 shoot = Vector2.zero();
 
   @override
   Future<void> onLoad() async {
-    position = gameRef.size / 2;
-    size = Vector2.all(10.0);
-    anchor = Anchor.center;
-
     add(TimerComponent(period: 0.2, repeat: true, onTick: fire));
   }
 
@@ -31,7 +32,7 @@ class Ship extends PositionComponent with KeyboardHandler, HasGameRef<MyGame> {
     if (shoot.isZero()) {
       return;
     }
-    gameRef.add(
+    game.world.add(
       Bullet(
         position: position,
         velocity: shoot * _bullet,
@@ -67,24 +68,40 @@ class Ship extends PositionComponent with KeyboardHandler, HasGameRef<MyGame> {
     return true;
   }
 
+  // These are used to avoid creating new Vector2 objects in the update-loop.
+  final _velocityTmp = Vector2.zero();
+  final _accelerationTmp = Vector2.zero();
+
   @override
   void update(double dt) {
     super.update(dt);
 
     final dt2 = dt * dt;
 
-    final engine = move * _engine;
-    final drag = velocity.clone()
+    engine
+      ..setFrom(move)
+      ..scale(_engine);
+    drag
+      ..setFrom(velocity)
       ..scaleTo(_drag)
       ..scale(-1);
-    final acc = engine + drag;
+    acceleration
+      ..setFrom(engine)
+      ..add(drag);
 
-    velocity += acc * dt;
-    position += velocity * dt + acc * dt2 / 2;
-  }
+    _accelerationTmp
+      ..setFrom(acceleration)
+      ..scale(dt);
+    velocity.add(_accelerationTmp);
 
-  @override
-  void render(Canvas c) {
-    c.drawRect(Vector2.zero() & size, _paint);
+    _velocityTmp
+      ..setFrom(velocity)
+      ..scale(dt);
+    _accelerationTmp
+      ..setFrom(acceleration)
+      ..scale(dt2 / 2);
+    position
+      ..add(_velocityTmp)
+      ..add(_accelerationTmp);
   }
 }

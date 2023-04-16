@@ -1,32 +1,27 @@
 import 'package:flame/components.dart';
-import 'package:flame/extensions.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
+import 'package:flutter_con_game/main.dart';
 
-class Bullet extends PositionComponent with HasGameRef {
+class Bullet extends CircleComponent with HasGameReference<MyGame> {
   static final _paint = BasicPalette.white.paint();
-  Vector2 velocity;
+  final Vector2 velocity;
 
   Bullet({
     required super.position,
     required this.velocity,
-  });
+  }) : super(radius: 2.0, anchor: Anchor.center, paint: _paint);
 
-  @override
-  Future<void> onLoad() async {
-    size = Vector2.all(3.0);
-    anchor = Anchor.center;
-  }
+  final _velocityTmp = Vector2.zero();
 
   @override
   void update(double dt) {
-    position += velocity * dt;
-    if (!gameRef.size.toRect().containsPoint(position)) {
-      gameRef.remove(this);
+    _velocityTmp
+      ..setFrom(velocity)
+      ..scale(dt);
+    position.add(_velocityTmp);
+    if (!game.cameraComponent.canSee(this)) {
+      removeFromParent();
     }
-  }
-
-  @override
-  void render(Canvas c) {
-    c.drawRect(Vector2.zero() & size, _paint);
   }
 }
