@@ -1,3 +1,4 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
@@ -11,6 +12,12 @@ class Bullet extends CircleComponent with HasGameReference<MyGame> {
     required super.position,
     required this.velocity,
   }) : super(radius: 2.0, anchor: Anchor.center, paint: _paint);
+
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
+    add(CircleHitbox()..collisionType = CollisionType.passive);
+  }
 
   final _velocityTmp = Vector2.zero();
 

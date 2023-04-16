@@ -9,7 +9,8 @@ void main() {
   runApp(const GameWidget.controlled(gameFactory: MyGame.new));
 }
 
-class MyGame extends FlameGame with HasKeyboardHandlerComponents {
+class MyGame extends FlameGame
+    with HasKeyboardHandlerComponents, HasCollisionDetection {
   late final CameraComponent cameraComponent;
   late final World world;
 

@@ -1,3 +1,4 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
@@ -7,7 +8,7 @@ import 'package:flutter_con_game/main.dart';
 import 'package:flutter_con_game/utils/keyboard_handler_utils.dart';
 
 class Ship extends RectangleComponent
-    with KeyboardHandler, HasGameReference<MyGame> {
+    with KeyboardHandler, HasGameReference<MyGame>, CollisionCallbacks {
   static final _paint = BasicPalette.cyan.paint();
   static const _engine = 25.0;
   static const _drag = 5.0;
@@ -25,6 +26,7 @@ class Ship extends RectangleComponent
 
   @override
   Future<void> onLoad() async {
+    add(RectangleHitbox());
     add(TimerComponent(period: 0.2, repeat: true, onTick: fire));
   }
 
@@ -76,6 +78,8 @@ class Ship extends RectangleComponent
   void update(double dt) {
     super.update(dt);
 
+    // TODO(any): Restrict movement to only allow ship to be within screen.
+
     final dt2 = dt * dt;
 
     engine
@@ -103,5 +107,19 @@ class Ship extends RectangleComponent
     position
       ..add(_velocityTmp)
       ..add(_accelerationTmp);
+  }
+
+  @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    super.onCollisionStart(intersectionPoints, other);
+    if (other is Bullet) {
+      // TODO(any): Affect velocity by getting shot
+      other.removeFromParent();
+    } else if (other is Ship) {
+      // TODO(any): Don't let ships overlap
+    }
   }
 }
