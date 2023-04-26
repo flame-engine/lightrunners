@@ -122,7 +122,7 @@ packages:
     source: hosted
     version: "1.1.1"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       sha256: cfc915e6923fe5ce6e153b0723c753045de46de1b4d63771530504004a45fae0
@@ -189,10 +189,10 @@ packages:
     dependency: "direct main"
     description:
       name: flame_audio
-      sha256: "323ae5e2c4871859bf77efc4111f9757a773721e572537439f3456fb63ac7416"
+      sha256: "2898e59b36485ee55a0e161a21e7346949030a6b2da948ce25df39f16d2874c0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   flame_lint:
     dependency: "direct dev"
     description:
@@ -242,6 +242,46 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  gamepads:
+    dependency: "direct main"
+    description:
+      name: gamepads
+      sha256: "5c6b0b576b455a29295306004cee7c51699958efb9fad6e6371d89a076f2688d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
+  gamepads_darwin:
+    dependency: transitive
+    description:
+      name: gamepads_darwin
+      sha256: a101811ef2a7c57632ed54d78b4c1b2e1e83a4b0031da62151b0537de9b5932d
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
+  gamepads_linux:
+    dependency: transitive
+    description:
+      name: gamepads_linux
+      sha256: "7a16bef9d773648aae86204da3915e0172d3f5789b08714f65b18ce663a12611"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
+  gamepads_platform_interface:
+    dependency: transitive
+    description:
+      name: gamepads_platform_interface
+      sha256: b659d9103ff2bfd2d5d6d0863bb63446f384c0c545cd989f89adc953b561c7e5
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
+  gamepads_windows:
+    dependency: transitive
+    description:
+      name: gamepads_windows
+      sha256: "177b98ce0c34f20a72c778641965d1428908ff1dc31dcede64320f309af4c635"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   glob:
     dependency: transitive
     description:
@@ -677,5 +717,5 @@ packages:
     source: hosted
     version: "3.1.1"
 sdks:
-  dart: ">=2.18.0 <3.0.0"
+  dart: ">=2.19.0 <3.0.0"
   flutter: ">=3.3.0"
