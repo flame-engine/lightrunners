@@ -7,15 +7,28 @@ import 'package:flutter_con_game/components/bullet.dart';
 import 'package:flutter_con_game/main.dart';
 import 'package:flutter_con_game/utils/keyboard_handler_utils.dart';
 
+import 'package:gamepads/gamepads.dart';
+
+final _shipColors = [
+  BasicPalette.green.paint(),
+  BasicPalette.cyan.paint(),
+  BasicPalette.red.paint(),
+];
+
 class Ship extends RectangleComponent
     with KeyboardHandler, HasGameReference<MyGame>, CollisionCallbacks {
-  static final _paint = BasicPalette.cyan.paint();
   static const _engine = 25.0;
   static const _drag = 5.0;
   static const _bullet = 300.0;
 
-  Ship() : super(size: Vector2.all(10), anchor: Anchor.center, paint: _paint);
+  Ship(this.playerNumber)
+      : super(
+          size: Vector2.all(10),
+          anchor: Anchor.center,
+          paint: _shipColors[playerNumber],
+        );
 
+  final int playerNumber;
   final Vector2 velocity = Vector2.zero();
   final Vector2 drag = Vector2.zero();
   final Vector2 engine = Vector2.zero();
@@ -36,7 +49,7 @@ class Ship extends RectangleComponent
     }
     game.world.add(
       Bullet(
-        position: position,
+        position: position + (shoot..scaled(size.length2)),
         velocity: shoot * _bullet,
       ),
     );
@@ -68,6 +81,26 @@ class Ship extends RectangleComponent
     );
 
     return true;
+  }
+
+  void onGamepadEvent(GamepadEvent event) {
+    if (event.value != 0) {
+      print('key: ${event.key}');
+      print('value: ${event.value}');
+      print('type: ${event.type}\n');
+    }
+
+    switch (event.key) {
+      // X-axis movement
+      case '0':
+        // TODO(any): the strength of value should be taken into consideration.
+        move.x = event.value.sign;
+        break;
+      // Y-axis movement
+      case '1':
+        move.y = event.value.sign;
+        break;
+    }
   }
 
   // These are used to avoid creating new Vector2 objects in the update-loop.
