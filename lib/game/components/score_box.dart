@@ -19,8 +19,8 @@ Paint _makePaint(Color color) {
 TextPaint _makeTextPaint(Color color) {
   return TextPaint(
     style: TextStyle(
-      fontFamily: GoogleFonts.bungeeShade().fontFamily,
-      fontSize: 80,
+      fontFamily: GoogleFonts.bungee().fontFamily,
+      fontSize: 52,
       color: color,
     ),
   );
