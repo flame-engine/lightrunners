@@ -4,12 +4,12 @@ import 'dart:ui';
 import 'package:flame/camera.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:gamepads/gamepads.dart';
 import 'package:lightrunners/game/components/game_border.dart';
 import 'package:lightrunners/game/components/score_panel.dart';
 import 'package:lightrunners/game/components/spotlight.dart';
 import 'package:lightrunners/game/game.dart';
 import 'package:lightrunners/utils/constants.dart';
-import 'package:gamepads/gamepads.dart';
 
 class LightRunnersGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {

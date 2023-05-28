@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flutter/painting.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lightrunners/game/components/ship.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
 import 'package:lightrunners/utils/constants.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 const _radius = Radius.circular(3.0);
 

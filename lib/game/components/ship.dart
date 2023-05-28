@@ -3,10 +3,9 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/services.dart';
+import 'package:gamepads/gamepads.dart';
 import 'package:lightrunners/game/game.dart';
 import 'package:lightrunners/utils/input_handler_utils.dart';
-
-import 'package:gamepads/gamepads.dart';
 
 final _shipColors = [
   BasicPalette.green.paint(),
