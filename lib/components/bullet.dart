@@ -6,9 +6,11 @@ import 'package:flutter_con_game/main.dart';
 
 class Bullet extends CircleComponent with HasGameReference<MyGame> {
   static final _paint = BasicPalette.white.paint();
+  final int ownerPlayerNumber;
   final Vector2 velocity;
 
   Bullet({
+    required this.ownerPlayerNumber,
     required super.position,
     required this.velocity,
   }) : super(radius: 2.0, anchor: Anchor.center, paint: _paint);

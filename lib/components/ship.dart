@@ -5,7 +5,7 @@ import 'package:flame/palette.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_con_game/components/bullet.dart';
 import 'package:flutter_con_game/main.dart';
-import 'package:flutter_con_game/utils/keyboard_handler_utils.dart';
+import 'package:flutter_con_game/utils/input_handler_utils.dart';
 
 import 'package:gamepads/gamepads.dart';
 
@@ -15,20 +15,34 @@ final _shipColors = [
   BasicPalette.red.paint(),
 ];
 
+GamepadJoystick? _makeJoystick(String? gamepadId, String xAxis, String yAxis) {
+  if (gamepadId == null) {
+    return null;
+  }
+  return GamepadJoystick(
+    gamepadId: gamepadId,
+    xAxisKey: xAxis,
+    yAxisKey: yAxis,
+  );
+}
+
 class Ship extends RectangleComponent
     with KeyboardHandler, HasGameReference<MyGame>, CollisionCallbacks {
-  static const _engine = 25.0;
+  static const _engine = 125.0;
   static const _drag = 5.0;
-  static const _bullet = 300.0;
+  static const _bulletSpeed = 300.0;
 
-  Ship(this.playerNumber)
-      : super(
+  Ship(this.playerNumber, this.gamepadId)
+      : moveJoystick = _makeJoystick(gamepadId, '0', '1'),
+        shootJoystick = _makeJoystick(gamepadId, '3', '4'),
+        super(
           size: Vector2.all(10),
           anchor: Anchor.center,
           paint: _shipColors[playerNumber],
         );
 
   final int playerNumber;
+  final String? gamepadId; // null means keyboard
   int score = 0;
 
   final Vector2 velocity = Vector2.zero();
@@ -36,6 +50,8 @@ class Ship extends RectangleComponent
   final Vector2 engine = Vector2.zero();
   final Vector2 acceleration = Vector2.zero();
 
+  final GamepadJoystick? moveJoystick;
+  final GamepadJoystick? shootJoystick;
   final Vector2 move = Vector2.zero();
   final Vector2 shoot = Vector2.zero();
 
@@ -51,8 +67,9 @@ class Ship extends RectangleComponent
     }
     game.world.add(
       Bullet(
+        ownerPlayerNumber: playerNumber,
         position: position + (shoot..scaled(size.length2)),
-        velocity: shoot * _bullet,
+        velocity: shoot * _bulletSpeed,
       ),
     );
   }
@@ -86,23 +103,21 @@ class Ship extends RectangleComponent
   }
 
   void onGamepadEvent(GamepadEvent event) {
-    if (event.value != 0) {
-      print('key: ${event.key}');
-      print('value: ${event.value}');
-      print('type: ${event.type}\n');
-    }
+    _handleGamepadAxisInput(moveJoystick, event, move);
+    _handleGamepadAxisInput(shootJoystick, event, shoot);
+  }
 
-    switch (event.key) {
-      // X-axis movement
-      case '0':
-        // TODO(any): the strength of value should be taken into consideration.
-        move.x = event.value.sign;
-        break;
-      // Y-axis movement
-      case '1':
-        move.y = event.value.sign;
-        break;
+  void _handleGamepadAxisInput(
+    GamepadJoystick? joystick,
+    GamepadEvent event,
+    Vector2 target,
+  ) {
+    if (joystick == null) {
+      return;
     }
+    joystick.consume(event);
+    target.x = joystick.state.x;
+    target.y = joystick.state.y;
   }
 
   // These are used to avoid creating new Vector2 objects in the update-loop.
@@ -151,6 +166,9 @@ class Ship extends RectangleComponent
   ) {
     super.onCollisionStart(intersectionPoints, other);
     if (other is Bullet) {
+      if (other.ownerPlayerNumber == playerNumber) {
+        return;
+      }
       // TODO(any): Affect velocity by getting shot
       other.removeFromParent();
     } else if (other is Ship) {

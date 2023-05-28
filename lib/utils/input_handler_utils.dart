@@ -1,5 +1,38 @@
 import 'package:flame/extensions.dart';
 import 'package:flutter/services.dart';
+import 'package:gamepads/gamepads.dart';
+
+const _joystickAxisMaxValue = 32767;
+
+class GamepadJoystick {
+  final String gamepadId;
+  final String xAxisKey;
+  final String yAxisKey;
+  final Vector2 state = Vector2.zero();
+
+  GamepadJoystick({
+    required this.gamepadId,
+    required this.xAxisKey,
+    required this.yAxisKey,
+  });
+
+  void consume(GamepadEvent event) {
+    if (event.gamepadId != gamepadId) {
+      return;
+    }
+
+    var intensity = (event.value / _joystickAxisMaxValue).clamp(-1.0, 1.0);
+    if (intensity.abs() < 0.2) {
+      intensity = 0;
+    }
+
+    if (event.key == xAxisKey) {
+      state.x = intensity;
+    } else if (event.key == yAxisKey) {
+      state.y = intensity;
+    }
+  }
+}
 
 void readArrowLikeKeysIntoVector2(
   RawKeyEvent event,
