@@ -13,19 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
-        with:
-          cache: true
-      - uses: bluefireteam/melos-action@main
-      - run: melos run format-check
-
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-      - uses: flame-engine/flame-format-action@v1
+      - uses: flame-engine/flame-format-action@v1.1.0
 
   analyze:
     runs-on: ubuntu-latest
@@ -35,4 +23,4 @@ jobs:
         with:
           cache: true
       - name: "Analyze"
-        uses: invertase/github-action-dart-analyzer@v1
+        run: flutter analyze
