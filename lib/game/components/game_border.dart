@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
-import 'package:flutter_con_game/game/lightrunners_game.dart';
+import 'package:lightrunners/game/lightrunners_game.dart';
 
 const _radius = Radius.circular(5);
 

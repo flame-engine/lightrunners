@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
-import 'package:flutter_con_game/game/components/score_box.dart';
-import 'package:flutter_con_game/game/lightrunners_game.dart';
-import 'package:flutter_con_game/utils/constants.dart';
+import 'package:lightrunners/game/components/score_box.dart';
+import 'package:lightrunners/game/lightrunners_game.dart';
+import 'package:lightrunners/utils/constants.dart';
 
 class ScorePanel extends PositionComponent with HasGameRef<LightRunnersGame> {
   @override
