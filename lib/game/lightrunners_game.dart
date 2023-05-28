@@ -6,6 +6,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter_con_game/game/components/game_border.dart';
 import 'package:flutter_con_game/game/components/score_panel.dart';
+import 'package:flutter_con_game/game/components/spotlight.dart';
 import 'package:flutter_con_game/game/game.dart';
 import 'package:flutter_con_game/utils/constants.dart';
 import 'package:gamepads/gamepads.dart';
@@ -28,6 +29,7 @@ class LightRunnersGame extends FlameGame
       size.y - 2 * screenMargin,
     );
     await add(GameBorder());
+    await add(Spotlight());
 
     final gamepads = await Gamepads.list();
     gamepads.forEach((g) => print(g.id));
