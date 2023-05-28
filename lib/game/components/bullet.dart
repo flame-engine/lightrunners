@@ -2,9 +2,9 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
-import 'package:flutter_con_game/main.dart';
+import 'package:flutter_con_game/game/game.dart';
 
-class Bullet extends CircleComponent with HasGameReference<MyGame> {
+class Bullet extends CircleComponent with HasGameReference<LightRunnersGame> {
   static final _paint = BasicPalette.white.paint();
   final int ownerPlayerNumber;
   final Vector2 velocity;

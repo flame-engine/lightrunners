@@ -3,8 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_con_game/components/bullet.dart';
-import 'package:flutter_con_game/main.dart';
+import 'package:flutter_con_game/game/game.dart';
 import 'package:flutter_con_game/utils/input_handler_utils.dart';
 
 import 'package:gamepads/gamepads.dart';
@@ -27,7 +26,10 @@ GamepadJoystick? _makeJoystick(String? gamepadId, String xAxis, String yAxis) {
 }
 
 class Ship extends RectangleComponent
-    with KeyboardHandler, HasGameReference<MyGame>, CollisionCallbacks {
+    with
+        KeyboardHandler,
+        HasGameReference<LightRunnersGame>,
+        CollisionCallbacks {
   static const _engine = 125.0;
   static const _drag = 5.0;
   static const _bulletSpeed = 300.0;
