@@ -30,3 +30,4 @@ flutter:
   assets:
     - google_fonts/
     - assets/images/
+    - assets/images/ships/
