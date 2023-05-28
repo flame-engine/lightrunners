@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_con_game/game/components/ship.dart';
 import 'package:flutter_con_game/game/lightrunners_game.dart';
 import 'package:flutter_con_game/utils/constants.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const _radius = Radius.circular(3.0);
 
@@ -15,8 +16,19 @@ Paint _makePaint(Color color) {
     ..strokeWidth = 4;
 }
 
+TextPaint _makeTextPaint(Color color) {
+  return TextPaint(
+    style: TextStyle(
+      fontFamily: GoogleFonts.bungeeShade().fontFamily,
+      fontSize: 80,
+      color: color,
+    ),
+  );
+}
+
 class ScoreBox extends PositionComponent with HasGameRef<LightRunnersGame> {
   late RRect rRect;
+  final TextPaint textPaint;
   final Paint paint;
   final Vector2 targetPosition;
   final Ship shipRef;
@@ -25,6 +37,7 @@ class ScoreBox extends PositionComponent with HasGameRef<LightRunnersGame> {
     required this.shipRef,
     required this.targetPosition,
   })  : paint = _makePaint(shipRef.paint.color),
+        textPaint = _makeTextPaint(shipRef.paint.color),
         super(position: targetPosition.clone());
 
   @override
@@ -45,5 +58,11 @@ class ScoreBox extends PositionComponent with HasGameRef<LightRunnersGame> {
   void render(Canvas canvas) {
     super.render(canvas);
     canvas.drawRRect(rRect, paint);
+    textPaint.render(
+      canvas,
+      shipRef.score.toString(),
+      size / 2,
+      anchor: Anchor.center,
+    );
   }
 }
