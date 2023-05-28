@@ -23,4 +23,4 @@ jobs:
         with:
           cache: true
       - name: "Analyze"
-      - uses: axel-op/dart-package-analyzer@v3
+        run: flutter analyze
