@@ -29,6 +29,8 @@ class Ship extends RectangleComponent
         );
 
   final int playerNumber;
+  int score = 0;
+
   final Vector2 velocity = Vector2.zero();
   final Vector2 drag = Vector2.zero();
   final Vector2 engine = Vector2.zero();
