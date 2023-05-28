@@ -1,13 +1,18 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:flutter_con_game/game/components/game_border.dart';
+import 'package:flutter_con_game/game/components/score_panel.dart';
 import 'package:flutter_con_game/game/game.dart';
+import 'package:flutter_con_game/utils/constants.dart';
 import 'package:gamepads/gamepads.dart';
 
 class LightRunnersGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
+  late final Rect playArea;
   late final CameraComponent cameraComponent;
   late final World world;
   late final Map<String, Ship> ships;
@@ -16,6 +21,14 @@ class LightRunnersGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
+    playArea = Rect.fromLTWH(
+      screenMargin,
+      screenMargin,
+      size.x - 2 * screenMargin - scoreBoxWidth - 2 * scoreBoxMargin,
+      size.y - 2 * screenMargin,
+    );
+    await add(GameBorder());
+
     final gamepads = await Gamepads.list();
     gamepads.forEach((g) => print(g.id));
     ships = {
@@ -29,6 +42,7 @@ class LightRunnersGame extends FlameGame
     _subscription = Gamepads.events.listen((event) {
       ships[event.gamepadId]?.onGamepadEvent(event);
     });
+    await add(ScorePanel());
 
     world = World(children: ships.values);
     cameraComponent = CameraComponent(world: world);
