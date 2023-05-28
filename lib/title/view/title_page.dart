@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lightrunners/title/title.dart';
 import 'package:lightrunners/widgets/screen_scaffold.dart';
 
 class TitlePage extends StatelessWidget {
@@ -6,9 +7,9 @@ class TitlePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ScreenScaffold(
+    return ScreenScaffold(
       child: Center(
-        child: Text('Title Page'),
+        child: TitleLogo(state: LogoController()),
       ),
     );
   }
