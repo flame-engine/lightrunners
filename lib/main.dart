@@ -26,11 +26,11 @@ class MyGame extends FlameGame
     gamepads.forEach((g) => print(g.id));
     ships = {
       for (final gamepad in gamepads)
-        gamepad.id: Ship(gamepads.indexOf(gamepad)),
+        gamepad.id: Ship(gamepads.indexOf(gamepad), gamepad.id),
     };
     if (ships.isEmpty) {
       print('No controllers found, using keyboard only');
-      ships[''] = Ship(0);
+      ships[''] = Ship(0, null);
     }
     _subscription = Gamepads.events.listen((event) {
       ships[event.gamepadId]?.onGamepadEvent(event);
