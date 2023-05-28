@@ -27,10 +27,6 @@ class Spotlight extends PositionComponent with HasGameRef<LightRunnersGame> {
     size = Vector2.all(_spotlightRadius * 2);
     position = Vector2.zero();
     newTarget = newRandomTarget();
-    paint.colorFilter = const ColorFilter.mode(
-      Color(0xFFFFFFFF),
-      BlendMode.lighten,
-    );
     _updateColor();
     return super.onLoad();
   }
@@ -51,7 +47,7 @@ class Spotlight extends PositionComponent with HasGameRef<LightRunnersGame> {
 
   void _updateCurrentShip() {
     final newShip = _decideCurrentShip();
-    if (newShip != currentShipRef) {
+    if (newShip?.playerNumber != currentShipRef?.playerNumber) {
       currentShipRef = newShip;
       scoringCounter = 0.0;
     }
@@ -80,6 +76,10 @@ class Spotlight extends PositionComponent with HasGameRef<LightRunnersGame> {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    canvas.drawCircle(Offset.zero, _spotlightRadius, paint);
+    canvas.drawCircle(
+      Vector2.all(_spotlightRadius).toOffset(),
+      _spotlightRadius,
+      paint,
+    );
   }
 }
