@@ -6,7 +6,7 @@ import 'package:flutter_con_game/game/lightrunners_game.dart';
 
 const _radius = Radius.circular(5);
 
-// TODO(luan) style this
+// TODO(luan): style this
 final _paint = Paint()
   ..color = const Color(0xFFFF00FF)
   ..style = PaintingStyle.stroke
