@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
-      - uses: flame-engine/flame-format-action@v1
+      - uses: flame-engine/flame-format-action@v1.1.0
 
   analyze:
     runs-on: ubuntu-latest
