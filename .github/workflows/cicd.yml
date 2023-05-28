@@ -14,16 +14,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: subosito/flutter-action@v2
         with:
-          cache: true
-      - uses: bluefireteam/melos-action@main
-      - run: melos run format-check
-
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: subosito/flutter-action@v2
-        with:
           channel: 'stable'
       - uses: flame-engine/flame-format-action@v1
 
