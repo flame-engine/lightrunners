@@ -3,13 +3,18 @@ import 'dart:async';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_con_game/components/ship.dart';
+import 'package:flutter_con_game/title/title.dart';
 import 'package:gamepads/gamepads.dart';
 
 void main() {
-  runApp(const GameWidget.controlled(gameFactory: MyGame.new));
+  runApp(
+    const MaterialApp(
+      home: TitlePage(),
+    ),
+  );
 }
 
 class MyGame extends FlameGame
@@ -26,11 +31,11 @@ class MyGame extends FlameGame
     gamepads.forEach((g) => print(g.id));
     ships = {
       for (final gamepad in gamepads)
-        gamepad.id: Ship(gamepads.indexOf(gamepad)),
+        gamepad.id: Ship(gamepads.indexOf(gamepad), gamepad.id),
     };
     if (ships.isEmpty) {
       print('No controllers found, using keyboard only');
-      ships[''] = Ship(0);
+      ships[''] = Ship(0, null);
     }
     _subscription = Gamepads.events.listen((event) {
       ships[event.gamepadId]?.onGamepadEvent(event);
