@@ -12,11 +12,13 @@ class TitleLogo extends Phased<int> {
   });
 
   static const _width = 500.0;
+  static const _height = 500.0;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: _width,
+      height: _height,
       child: Stack(
         alignment: Alignment.center,
         children: [
