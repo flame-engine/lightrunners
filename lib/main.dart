@@ -3,13 +3,18 @@ import 'dart:async';
 import 'package:flame/events.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_con_game/components/ship.dart';
+import 'package:flutter_con_game/title/title.dart';
 import 'package:gamepads/gamepads.dart';
 
 void main() {
-  runApp(const GameWidget.controlled(gameFactory: MyGame.new));
+  runApp(
+    const MaterialApp(
+      home: TitlePage(),
+    ),
+  );
 }
 
 class MyGame extends FlameGame
