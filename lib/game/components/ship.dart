@@ -3,8 +3,8 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_con_game/game/game.dart';
-import 'package:flutter_con_game/utils/input_handler_utils.dart';
+import 'package:lightrunners/game/game.dart';
+import 'package:lightrunners/utils/input_handler_utils.dart';
 
 import 'package:gamepads/gamepads.dart';
 

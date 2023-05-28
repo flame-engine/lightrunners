@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_con_game/widgets/screen_scaffold.dart';
+import 'package:lightrunners/widgets/screen_scaffold.dart';
 
 class TitlePage extends StatelessWidget {
   const TitlePage({super.key});

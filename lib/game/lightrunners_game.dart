@@ -4,11 +4,11 @@ import 'dart:ui';
 import 'package:flame/camera.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
-import 'package:flutter_con_game/game/components/game_border.dart';
-import 'package:flutter_con_game/game/components/score_panel.dart';
-import 'package:flutter_con_game/game/components/spotlight.dart';
-import 'package:flutter_con_game/game/game.dart';
-import 'package:flutter_con_game/utils/constants.dart';
+import 'package:lightrunners/game/components/game_border.dart';
+import 'package:lightrunners/game/components/score_panel.dart';
+import 'package:lightrunners/game/components/spotlight.dart';
+import 'package:lightrunners/game/game.dart';
+import 'package:lightrunners/utils/constants.dart';
 import 'package:gamepads/gamepads.dart';
 
 class LightRunnersGame extends FlameGame

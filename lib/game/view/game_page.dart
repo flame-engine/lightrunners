@@ -1,6 +1,6 @@
 import 'package:flame/game.dart' hide Route;
 import 'package:flutter/material.dart';
-import 'package:flutter_con_game/game/game.dart';
+import 'package:lightrunners/game/game.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});

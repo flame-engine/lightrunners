@@ -5,9 +5,9 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/palette.dart';
-import 'package:flutter_con_game/game/components/ship.dart';
-import 'package:flutter_con_game/game/lightrunners_game.dart';
-import 'package:flutter_con_game/utils/utils.dart';
+import 'package:lightrunners/game/components/ship.dart';
+import 'package:lightrunners/game/lightrunners_game.dart';
+import 'package:lightrunners/utils/utils.dart';
 
 const _spotlightRadius = 35.0;
 const _spotlightSpeed = 50.0;
