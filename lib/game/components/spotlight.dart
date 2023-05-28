@@ -9,8 +9,10 @@ import 'package:lightrunners/game/components/ship.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
 import 'package:lightrunners/utils/utils.dart';
 
-const _spotlightRadius = 35.0;
-const _spotlightSpeed = 50.0;
+const _spotlightRadius = 35.0; //pixels
+const _spotlightSpeed = 50.0; // pixels per second
+const _targetChangeProbability = 0.05; // per [_targetChangePeriod]
+const _targetChangePeriod = 0.5; // seconds
 final _r = Random();
 
 class Spotlight extends PositionComponent with HasGameRef<LightRunnersGame> {
@@ -19,6 +21,7 @@ class Spotlight extends PositionComponent with HasGameRef<LightRunnersGame> {
   double scoringCounter = 0.0;
   Ship? currentShipRef;
 
+  double targetChangeCounter = 0.0;
   Vector2 newTarget = Vector2.zero();
 
   @override
@@ -34,9 +37,30 @@ class Spotlight extends PositionComponent with HasGameRef<LightRunnersGame> {
   @override
   void update(double dt) {
     super.update(dt);
+
+    _maybeUpdateTarget(dt);
     moveTowards(position, newTarget, _spotlightSpeed * dt);
-    // maybe new random target
+
     _updateCurrentShip();
+    _computeScoring(dt);
+  }
+
+  void _maybeUpdateTarget(double dt) {
+    targetChangeCounter += dt;
+    while (targetChangeCounter > _targetChangePeriod) {
+      targetChangeCounter -= _targetChangePeriod;
+      if (_r.nextDouble() <= _targetChangeProbability) {
+        newTarget = newRandomTarget();
+      }
+    }
+  }
+
+  void _computeScoring(double dt) {
+    scoringCounter += dt;
+    while (scoringCounter > 1.0) {
+      scoringCounter -= 1.0;
+      currentShipRef?.score++;
+    }
     // scoring
   }
 
