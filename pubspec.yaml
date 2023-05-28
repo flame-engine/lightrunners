@@ -28,3 +28,4 @@ flutter:
   uses-material-design: false
   assets:
     - google_fonts/
+    - assets/images/
