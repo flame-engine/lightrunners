@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:flame/camera.dart';
 import 'package:flame/events.dart';
-import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
