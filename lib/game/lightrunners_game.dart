@@ -29,7 +29,6 @@ class LightRunnersGame extends FlameGame
       size.y - 2 * screenMargin,
     );
     await add(GameBorder());
-    await add(Spotlight());
 
     final gamepads = await Gamepads.list();
     gamepads.forEach((g) => print(g.id));
@@ -46,7 +45,9 @@ class LightRunnersGame extends FlameGame
     });
     await add(ScorePanel());
 
-    world = World(children: ships.values);
+    world = World(
+      children: [Spotlight(), ...ships.values],
+    );
     cameraComponent = CameraComponent(world: world);
     await addAll([world, cameraComponent]);
   }
