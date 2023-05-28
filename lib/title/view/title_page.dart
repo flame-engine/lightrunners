@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lightrunners/game/view/game_page.dart';
+import 'package:lightrunners/game/game.dart';
+import 'package:lightrunners/title/title.dart';
 import 'package:lightrunners/widgets/screen_scaffold.dart';
 
 class TitlePage extends StatelessWidget {
@@ -10,7 +11,7 @@ class TitlePage extends StatelessWidget {
     return ScreenScaffold(
       child: Column(
         children: [
-          const Text('Title Page'),
+          TitleLogo(state: LogoController()),
           ElevatedButton(
             child: const Text('Go to Game Page'),
             onPressed: () {
