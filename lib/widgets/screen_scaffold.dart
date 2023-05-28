@@ -30,9 +30,12 @@ class ScreenScaffold extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.asset(
-                    'assets/images/bg.png',
-                    fit: BoxFit.cover,
+                  Opacity(
+                    opacity: 0.7,
+                    child: Image.asset(
+                      'assets/images/bg.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   child,
                 ],
