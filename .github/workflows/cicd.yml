@@ -23,4 +23,4 @@ jobs:
         with:
           cache: true
       - name: "Analyze"
-        uses: invertase/github-action-dart-analyzer@v1
+        uses: invertase/github-action-dart-analyzer@v2
