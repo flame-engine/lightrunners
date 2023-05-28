@@ -1,6 +1,6 @@
 import 'package:flame/game.dart' hide Route;
 import 'package:flutter/material.dart';
-import 'package:flutter_con_game/main.dart';
+import 'package:flutter_con_game/game/game.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -16,13 +16,13 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-  late final MyGame _game;
+  late final LightRunnersGame _game;
 
   @override
-    void initState() {
-      super.initState();
-      _game = MyGame();
-    }
+  void initState() {
+    super.initState();
+    _game = LightRunnersGame();
+  }
 
   @override
   Widget build(BuildContext context) {
