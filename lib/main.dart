@@ -4,9 +4,10 @@ import 'package:flutter_con_game/title/title.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
-      home: TitlePage(),
+      home: const TitlePage(),
       theme: ThemeData(
         colorScheme: const ColorScheme.dark(
           primary: Color(0xFFE0D932),
