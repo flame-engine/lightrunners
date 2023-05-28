@@ -13,7 +13,7 @@ const _spotlightRadius = 35.0; //pixels
 const _spotlightSpeed = 50.0; // pixels per second
 const _targetChangeProbability = 0.05; // per [_targetChangePeriod]
 const _targetChangePeriod = 0.5; // seconds
-final _r = Random();
+final _random = Random();
 
 class Spotlight extends PositionComponent
     with HasGameReference<LightRunnersGame>, HasPaint {
@@ -50,7 +50,7 @@ class Spotlight extends PositionComponent
     targetChangeCounter += dt;
     while (targetChangeCounter > _targetChangePeriod) {
       targetChangeCounter -= _targetChangePeriod;
-      if (_r.nextDouble() <= _targetChangeProbability) {
+      if (_random.nextDouble() <= _targetChangeProbability) {
         updateRandomTarget();
       }
     }
@@ -92,8 +92,8 @@ class Spotlight extends PositionComponent
 
   void updateRandomTarget() {
     final rect = game.playArea.deflate(_spotlightRadius);
-    final x = -rect.width / 2 + _r.nextDouble() * rect.width;
-    final y = -rect.height / 2 + _r.nextDouble() * rect.height;
+    final x = -rect.width / 2 + _random.nextDouble() * rect.width;
+    final y = -rect.height / 2 + _random.nextDouble() * rect.height;
     target.setValues(x, y);
   }
 
