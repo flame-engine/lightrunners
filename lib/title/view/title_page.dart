@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lightrunners/game/game.dart';
-import 'package:lightrunners/title/title.dart';
+import 'package:lightrunners/widgets/controller_menu.dart';
 import 'package:lightrunners/widgets/screen_scaffold.dart';
 
 class TitlePage extends StatelessWidget {
@@ -10,13 +10,30 @@ class TitlePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenScaffold(
       child: Column(
-        children: [
-          TitleLogo(state: LogoController()),
-          ElevatedButton(
-            child: const Text('Go to Game Page'),
-            onPressed: () {
-              Navigator.of(context).push(GamePage.route());
-            },
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Flexible(
+            flex: 4,
+            child: Image.asset('assets/images/temporary_logo.png'),
+          ),
+          Flexible(
+            flex: 1,
+            child: Center(
+              child: ControllerMenu(
+                options: [
+                  (
+                    name: 'Start',
+                    onPressed: () {
+                      Navigator.of(context).push(GamePage.route());
+                    },
+                  ),
+                  (
+                    name: 'LeaderBoard',
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
