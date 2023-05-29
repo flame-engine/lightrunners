@@ -15,6 +15,8 @@ final _paint = Paint()
 
 class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
   late RRect rRect;
+  // TODO(all): change from static sprite to a dynamic, living thing.
+  late final Sprite background;
 
   @override
   Future<void> onLoad() async {
@@ -22,12 +24,15 @@ class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
     size = gameRef.playArea.size.toVector2();
     rRect = RRect.fromRectAndRadius(Vector2.zero() & size, _radius);
 
+    background = await gameRef.loadSprite('bg.png');
+
     return super.onLoad();
   }
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
+    background.render(canvas, size: size);
     canvas.drawRRect(rRect, _paint);
   }
 }

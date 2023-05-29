@@ -122,7 +122,7 @@ class Ship extends PositionComponent
       right: LogicalKeyboardKey.arrowRight,
     );
 
-    return true;
+    return false;
   }
 
   void onGamepadEvent(GamepadEvent event) {
