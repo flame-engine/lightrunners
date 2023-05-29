@@ -99,7 +99,7 @@ class Ship extends RectangleComponent
       right: LogicalKeyboardKey.arrowRight,
     );
 
-    return true;
+    return false;
   }
 
   void onGamepadEvent(GamepadEvent event) {
