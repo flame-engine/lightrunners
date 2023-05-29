@@ -1,17 +1,16 @@
+import 'dart:ui';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/palette.dart';
 import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:lightrunners/game/game.dart';
+import 'package:lightrunners/ui/ui.dart';
 import 'package:lightrunners/utils/input_handler_utils.dart';
 
-final _shipColors = [
-  BasicPalette.green.paint(),
-  BasicPalette.cyan.paint(),
-  BasicPalette.red.paint(),
-];
+final _shipColors =
+    GamePalette.values.map((color) => Paint()..color = color).toList();
 
 GamepadJoystick? _makeJoystick(String? gamepadId, String xAxis, String yAxis) {
   if (gamepadId == null) {
