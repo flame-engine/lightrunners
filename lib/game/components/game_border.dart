@@ -9,7 +9,7 @@ const _radius = Radius.circular(5);
 
 // TODO(luan): style this
 final _paint = Paint()
-  ..color = GamePalette.pink 
+  ..color = GamePalette.pink
   ..style = PaintingStyle.stroke
   ..strokeWidth = 4;
 

@@ -12,6 +12,17 @@ import 'package:lightrunners/utils/input_handler_utils.dart';
 final _shipColors =
     GamePalette.values.map((color) => Paint()..color = color).toList();
 
+final _shipSprites = [
+  'crimson_fury.png',
+  'star_chaser.png',
+  'photon_raider.png',
+  'dagger_of_venus.png',
+  'netunos_wrath.png',
+  'andromedas_revenge.png',
+  'purple_haze.png',
+  'silver_bullet.png',
+];
+
 GamepadJoystick? _makeJoystick(String? gamepadId, String xAxis, String yAxis) {
   if (gamepadId == null) {
     return null;
@@ -23,11 +34,12 @@ GamepadJoystick? _makeJoystick(String? gamepadId, String xAxis, String yAxis) {
   );
 }
 
-class Ship extends RectangleComponent
+class Ship extends PositionComponent
     with
         KeyboardHandler,
         HasGameReference<LightRunnersGame>,
-        CollisionCallbacks {
+        CollisionCallbacks,
+        HasPaint {
   static const _engine = 125.0;
   static const _drag = 5.0;
   static const _bulletSpeed = 300.0;
@@ -36,14 +48,17 @@ class Ship extends RectangleComponent
       : moveJoystick = _makeJoystick(gamepadId, '0', '1'),
         shootJoystick = _makeJoystick(gamepadId, '3', '4'),
         super(
-          size: Vector2.all(10),
+          size: Vector2(40, 80),
           anchor: Anchor.center,
-          paint: _shipColors[playerNumber],
-        );
+        ) {
+    paint = _shipColors[playerNumber];
+    spritePath = _shipSprites[playerNumber];
+  }
 
   final int playerNumber;
   final String? gamepadId; // null means keyboard
   int score = 0;
+  late final String spritePath;
 
   final Vector2 velocity = Vector2.zero();
   final Vector2 drag = Vector2.zero();
@@ -57,8 +72,16 @@ class Ship extends RectangleComponent
 
   @override
   Future<void> onLoad() async {
+    final sprite = await game.loadSprite('ships/$spritePath');
     add(RectangleHitbox());
     add(TimerComponent(period: 0.2, repeat: true, onTick: fire));
+    add(
+      SpriteComponent(
+        sprite: sprite,
+        size: size,
+        anchor: Anchor.center,
+      ),
+    );
   }
 
   void fire() {
