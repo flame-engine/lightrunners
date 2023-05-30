@@ -59,6 +59,7 @@ class Ship extends PositionComponent
   final String? gamepadId; // null means keyboard
   int score = 0;
   late final String spritePath;
+  late SpriteComponent sprite;
 
   final Vector2 velocity = Vector2.zero();
   final Vector2 drag = Vector2.zero();
@@ -76,7 +77,8 @@ class Ship extends PositionComponent
     add(RectangleHitbox());
     add(TimerComponent(period: 0.2, repeat: true, onTick: fire));
     add(
-      SpriteComponent(
+      this.sprite = SpriteComponent(
+        position: size / 2,
         sprite: sprite,
         size: size,
         anchor: Anchor.center,
@@ -180,6 +182,10 @@ class Ship extends PositionComponent
     position
       ..add(_velocityTmp)
       ..add(_accelerationTmp);
+
+    if (!engine.isZero()) {
+      sprite.angle = -engine.angleToSigned(Vector2(0, -1));
+    }
   }
 
   @override
