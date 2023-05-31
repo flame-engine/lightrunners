@@ -8,6 +8,7 @@ extension BetterRect on Rect {
   Rectangle toFlameRectangle() => Rectangle.fromLTRB(left, top, width, height);
 }
 
+// ignore: non_constant_identifier_names
 Rectangle Rectangle_fromCenter({
   required Vector2 center,
   required Vector2 size,
