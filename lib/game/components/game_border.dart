@@ -21,6 +21,9 @@ class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
     ..strokeWidth = 8;
   late RRect rRect;
 
+  late Rectangle clipArea;
+  late Vector2 clipAreaCenter;
+
   // TODO(all): change from static sprite to a dynamic, living thing.
   late final Sprite background;
 
@@ -39,6 +42,18 @@ class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
   }
 
   @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+
+    final clipAreaSize = gameRef.playArea.inflate(200.0).size.toVector2();
+    clipArea = Rectangle_fromCenter(
+      center: Vector2.zero(),
+      size: clipAreaSize,
+    );
+    clipAreaCenter = gameRef.playArea.center.toVector2();
+  }
+
+  @override
   void update(double dt) {
     super.update(dt);
 
@@ -51,18 +66,11 @@ class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
     super.render(canvas);
     background.render(canvas, size: size);
 
-    final clipAreaSize = gameRef.playArea.inflate(200.0).size.toVector2();
-    final clipArea = Rectangle_fromCenter(
-      center: Vector2.zero(),
-      size: clipAreaSize,
-    );
-
-    final p = gameRef.playArea.center.toVector2();
     for (final (color, path) in _generateBorderClips(clipArea)) {
       canvas.save();
-      canvas.translateVector(p);
+      canvas.translateVector(clipAreaCenter);
       canvas.clipPath(path);
-      canvas.translateVector(-p);
+      canvas.translateVector(-clipAreaCenter);
       canvas.drawRRect(rRect, paint..color = color);
       canvas.restore();
     }

@@ -4,7 +4,7 @@ import 'package:flame/geometry.dart';
 
 // TODO(luan): optmize, test, and move this to Flame
 
-extension BetterRect on Rect {
+extension RectExtension on Rect {
   Rectangle toFlameRectangle() => Rectangle.fromLTRB(left, top, width, height);
 }
 
@@ -20,7 +20,7 @@ Rectangle Rectangle_fromCenter({
   );
 }
 
-extension BetterRectangle on Rectangle {
+extension RectangleExtension on Rectangle {
   Rect toRect() => Rect.fromLTWH(left, top, width, height);
 
   List<Vector2> intersections(LineSegment line) {
