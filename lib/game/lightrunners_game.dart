@@ -5,6 +5,7 @@ import 'package:flame/camera.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:gamepads/gamepads.dart';
+import 'package:lightrunners/game/components/background.dart';
 import 'package:lightrunners/game/components/game_border.dart';
 import 'package:lightrunners/game/components/score_panel.dart';
 import 'package:lightrunners/game/components/spotlight.dart';
@@ -28,6 +29,7 @@ class LightRunnersGame extends FlameGame
       size.x - 2 * screenMargin - scoreBoxWidth - 2 * scoreBoxMargin,
       size.y - 2 * screenMargin,
     );
+    await add(Background());
     await add(GameBorder());
 
     final gamepads = await Gamepads.list();
