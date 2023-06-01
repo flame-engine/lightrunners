@@ -13,7 +13,7 @@ Paint _makePaint(Color color) {
   return Paint()
     ..color = color
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 4;
+    ..strokeWidth = 8;
 }
 
 TextPaint _makeTextPaint(Color color) {
