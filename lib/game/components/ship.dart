@@ -34,12 +34,11 @@ GamepadJoystick? _makeJoystick(String? gamepadId, String xAxis, String yAxis) {
   );
 }
 
-class Ship extends PositionComponent
+class Ship extends SpriteComponent
     with
         KeyboardHandler,
         HasGameReference<LightRunnersGame>,
-        CollisionCallbacks,
-        HasPaint {
+        CollisionCallbacks {
   static const _engine = 125.0;
   static const _drag = 5.0;
   static const _bulletSpeed = 300.0;
@@ -72,16 +71,9 @@ class Ship extends PositionComponent
 
   @override
   Future<void> onLoad() async {
-    final sprite = await game.loadSprite('ships/$spritePath');
+    sprite = await game.loadSprite('ships/$spritePath');
     add(RectangleHitbox());
     add(TimerComponent(period: 0.2, repeat: true, onTick: fire));
-    add(
-      SpriteComponent(
-        sprite: sprite,
-        size: size,
-        anchor: Anchor.center,
-      ),
-    );
   }
 
   void fire() {
@@ -180,6 +172,10 @@ class Ship extends PositionComponent
     position
       ..add(_velocityTmp)
       ..add(_accelerationTmp);
+
+    if (!engine.isZero()) {
+      angle = -engine.angleToSigned(Vector2(0, -1));
+    }
   }
 
   @override
