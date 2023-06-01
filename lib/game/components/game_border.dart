@@ -18,7 +18,7 @@ final _white = BasicPalette.white.color;
 class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
   final paint = Paint()
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 4;
+    ..strokeWidth = 8;
   late RRect rRect;
 
   // TODO(all): change from static sprite to a dynamic, living thing.
