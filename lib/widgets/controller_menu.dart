@@ -4,10 +4,15 @@ import 'package:lightrunners/ui/palette.dart';
 
 typedef ControllerMenuOprion = ({String name, VoidCallback onPressed});
 
+final _paint = Paint()
+  ..color = GamePalette.yellow
+  ..strokeWidth = 10
+  ..strokeCap = StrokeCap.round;
+
 class ControllerMenu extends StatefulWidget {
   const ControllerMenu({
-    super.key,
     required this.options,
+    super.key,
   });
 
   final List<ControllerMenuOprion> options;
@@ -17,8 +22,6 @@ class ControllerMenu extends StatefulWidget {
 }
 
 class _ControllerMenuState extends State<ControllerMenu> {
-
-
   int focusedOption = 0;
 
   @override
@@ -39,7 +42,7 @@ class _ControllerMenuState extends State<ControllerMenu> {
                     if (widget.options.indexOf(option) == focusedOption)
                       const Doritos(size: Size(28, 40))
                     else
-                       SizedBox.fromSize(size: const Size(28, 40)),
+                      const SizedBox(width: 28, height: 40),
                     const SizedBox(width: 16),
                     Text(
                       option.name,
@@ -60,7 +63,7 @@ class _ControllerMenuState extends State<ControllerMenu> {
 }
 
 class Doritos extends StatelessWidget {
-  const Doritos({super.key, required this.size});
+  const Doritos({required this.size, super.key});
 
   final Size size;
 
@@ -76,18 +79,13 @@ class Doritos extends StatelessWidget {
 class _DoritosPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = GamePalette.yellow
-      ..strokeWidth = 10
-      ..strokeCap = StrokeCap.round;
-
     final path = Path()
       ..moveTo(0, 0)
       ..lineTo(size.width, size.height / 2)
       ..lineTo(0, size.height)
       ..close();
 
-    canvas.drawPath(path, paint);
+    canvas.drawPath(path, _paint);
   }
 
   @override

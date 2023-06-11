@@ -17,7 +17,6 @@ class TitlePage extends StatelessWidget {
             child: Image.asset('assets/images/temporary_logo.png'),
           ),
           Flexible(
-            flex: 1,
             child: Center(
               child: ControllerMenu(
                 options: [
