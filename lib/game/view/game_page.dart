@@ -4,11 +4,13 @@ import 'package:lightrunners/end_game/end_game.dart';
 import 'package:lightrunners/game/game.dart';
 
 class GamePage extends StatefulWidget {
-  const GamePage({super.key});
+  const GamePage({required this.players, super.key});
 
-  static Route<void> route() {
+  final List<String> players;
+
+  static Route<void> route({required List<String> players}) {
     return MaterialPageRoute<void>(
-      builder: (_) => const GamePage(),
+      builder: (_) => GamePage(players: players),
     );
   }
 
@@ -23,7 +25,8 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     super.initState();
     _game = LightRunnersGame(
-      (scores) {
+      players: widget.players,
+      onEndGame: (scores) {
         Navigator.of(context).push(
           EndGamePage.route(scores),
         );

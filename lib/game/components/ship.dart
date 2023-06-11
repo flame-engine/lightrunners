@@ -12,15 +12,15 @@ import 'package:lightrunners/utils/input_handler_utils.dart';
 final _shipColors =
     GamePalette.shipValues.map((color) => Paint()..color = color).toList();
 
-const shipSprites = [
-  'crimson_fury.png',
-  'star_chaser.png',
-  'photon_raider.png',
-  'dagger_of_venus.png',
+final shipSprites = [
   'netunos_wrath.png',
   'andromedas_revenge.png',
   'purple_haze.png',
   'silver_bullet.png',
+  'crimson_fury.png',
+  'star_chaser.png',
+  'photon_raider.png',
+  'dagger_of_venus.png',
 ];
 
 GamepadJoystick? _makeJoystick(String? gamepadId, String xAxis, String yAxis) {
