@@ -24,33 +24,19 @@ class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
   late Rectangle clipArea;
   late Vector2 clipAreaCenter;
 
-  // TODO(all): change from static sprite to a dynamic, living thing.
-  late final Sprite background;
-
   /// The phase of rotation
   double _phi = 0.0;
 
   @override
-  Future<void> onLoad() async {
+  void onGameResize(Vector2 gameSize) {
+    super.onGameResize(gameSize);
+
     position = gameRef.playArea.topLeft.toVector2();
     size = gameRef.playArea.size.toVector2();
     rRect = RRect.fromRectAndRadius(Vector2.zero() & size, _radius);
 
-    background = await gameRef.loadSprite('bg.png');
-
-    return super.onLoad();
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-
-    final clipAreaSize = gameRef.playArea.inflate(200.0).size.toVector2();
-    clipArea = Rectangle_fromCenter(
-      center: Vector2.zero(),
-      size: clipAreaSize,
-    );
-    clipAreaCenter = gameRef.playArea.center.toVector2();
+    clipArea = gameRef.playArea.inflate(200.0).toFlameRectangle();
+    clipAreaCenter = clipArea.center;
   }
 
   @override
@@ -64,7 +50,6 @@ class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    background.render(canvas, size: size);
 
     for (final (color, path) in _generateBorderClips(clipArea)) {
       canvas.save();
@@ -130,7 +115,7 @@ class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
       }).sortedBy<num>((e) => e > alpha1 ? 0 : 1),
       alpha2,
     ];
-    final clipLength = clipArea.width + clipArea.height;
+    final clipLength = 2 * (clipArea.width + clipArea.height);
     // convert each angle to its intersection point in the clip area rectangle
     final points = angles
         .map((e) => Vector2(cos(e), sin(e))..scale(clipLength))

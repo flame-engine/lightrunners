@@ -12,3 +12,6 @@ void moveTowards(Vector2 pos, Vector2 target, double ds) {
     pos.add(diff.normalized() * ds);
   }
 }
+
+// 55'' display standard aspect ratio
+final fixedSize = Vector2(121.7, 68.6) * 15;
