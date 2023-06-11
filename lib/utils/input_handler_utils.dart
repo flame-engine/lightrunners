@@ -1,13 +1,16 @@
+import 'dart:io';
+
 import 'package:flame/extensions.dart';
 import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
+import 'package:lightrunners/utils/gamepad_map.dart';
 
 const _joystickAxisMaxValue = 32767;
 
 class GamepadJoystick {
   final String gamepadId;
-  final String xAxisKey;
-  final String yAxisKey;
+  final GamepadKey xAxisKey;
+  final GamepadKey yAxisKey;
   final Vector2 state = Vector2.zero();
 
   GamepadJoystick({
@@ -21,14 +24,17 @@ class GamepadJoystick {
       return;
     }
 
-    var intensity = (event.value / _joystickAxisMaxValue).clamp(-1.0, 1.0);
+    var intensity = Platform.isMacOS
+        ? event.value
+        : (event.value / _joystickAxisMaxValue).clamp(-1.0, 1.0);
+
     if (intensity.abs() < 0.2) {
       intensity = 0;
     }
 
-    if (event.key == xAxisKey) {
+    if (xAxisKey.matches(event.key)) {
       state.x = intensity;
-    } else if (event.key == yAxisKey) {
+    } else if (yAxisKey.matches(event.key)) {
       state.y = intensity;
     }
   }
