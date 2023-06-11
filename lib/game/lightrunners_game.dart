@@ -30,6 +30,14 @@ class LightRunnersGame extends FlameGame
     );
     await add(GameBorder());
 
+    await add(
+      Timer(
+        onTimeUp: () {
+          // TODO(erickzanardo): implement endgame.
+        },
+      ),
+    );
+
     final gamepads = await Gamepads.list();
     gamepads.forEach((g) => print(g.id));
     ships = {
