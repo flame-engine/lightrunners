@@ -27,7 +27,7 @@ class _ControllerMenuState extends State<ControllerMenu> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 650,
+      width: 250,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,19 +36,19 @@ class _ControllerMenuState extends State<ControllerMenu> {
             TextButton(
               onPressed: option.onPressed,
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(4.0),
                 child: Row(
                   children: [
                     if (widget.options.indexOf(option) == focusedOption)
-                      const Doritos(size: Size(28, 40))
+                      const Doritos(size: Size(12, 22))
                     else
-                      const SizedBox(width: 28, height: 40),
+                      const SizedBox(width: 12, height: 22),
                     const SizedBox(width: 16),
                     Text(
                       option.name,
                       style: TextStyle(
                         fontFamily: GoogleFonts.bungee().fontFamily,
-                        fontSize: 48,
+                        fontSize: 22,
                         color: Colors.white,
                       ),
                     ),
