@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:lightrunners/game/game.dart';
 import 'package:lightrunners/ui/ui.dart';
+import 'package:lightrunners/utils/gamepad_map.dart';
 import 'package:lightrunners/utils/input_handler_utils.dart';
 
 final _shipColors =
@@ -23,14 +24,18 @@ final shipSprites = [
   'dagger_of_venus.png',
 ];
 
-GamepadJoystick? _makeJoystick(String? gamepadId, String xAxis, String yAxis) {
+GamepadJoystick? _makeJoystick(
+  String? gamepadId,
+  GamepadKey xAxisKey,
+  GamepadKey yAxisKey,
+) {
   if (gamepadId == null) {
     return null;
   }
   return GamepadJoystick(
     gamepadId: gamepadId,
-    xAxisKey: xAxis,
-    yAxisKey: yAxis,
+    xAxisKey: xAxisKey,
+    yAxisKey: yAxisKey,
   );
 }
 
@@ -44,8 +49,16 @@ class Ship extends SpriteComponent
   static const _bulletSpeed = 300.0;
 
   Ship(this.playerNumber, this.gamepadId)
-      : moveJoystick = _makeJoystick(gamepadId, '0', '1'),
-        shootJoystick = _makeJoystick(gamepadId, '3', '4'),
+      : moveJoystick = _makeJoystick(
+          gamepadId,
+          const GamepadLeftXAxis(),
+          const GamepadLeftYAxis(),
+        ),
+        shootJoystick = _makeJoystick(
+          gamepadId,
+          const GamepadRightXAxis(),
+          const GamepadRightYAxis(),
+        ),
         super(
           size: Vector2(40, 80),
           anchor: Anchor.center,
