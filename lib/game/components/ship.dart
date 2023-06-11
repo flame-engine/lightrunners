@@ -182,7 +182,7 @@ class Ship extends SpriteComponent
     }
 
     if (position.x > game.playArea.right) {
-      position.x = game.playArea.left;
+      position.x = game.playArea.left - size.x;
     }
 
     if (position.y + size.y < game.playArea.top) {
@@ -190,7 +190,7 @@ class Ship extends SpriteComponent
     }
 
     if (position.y > game.playArea.bottom) {
-      position.y = game.playArea.top;
+      position.y = game.playArea.top - size.y;
     }
   }
 
