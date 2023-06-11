@@ -26,7 +26,7 @@ class _LobbyPageState extends State<LobbyPage> {
     super.initState();
     Gamepads.events.listen((GamepadEvent event) {
       setState(() {
-        if (event.key == '7') {
+        if (event.key == '7' || event.key == 'line.horizontal.3.circle') {
           // The start key was pressed
           Navigator.of(context).push(GamePage.route(players: _players));
         } else if (!_players.contains(event.gamepadId)) {
