@@ -5,11 +5,13 @@ import 'package:flame/camera.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:gamepads/gamepads.dart';
+import 'package:lightrunners/game/components/background.dart';
 import 'package:lightrunners/game/components/game_border.dart';
 import 'package:lightrunners/game/components/score_panel.dart';
 import 'package:lightrunners/game/components/spotlight.dart';
 import 'package:lightrunners/game/game.dart';
 import 'package:lightrunners/utils/constants.dart';
+import 'package:lightrunners/utils/utils.dart';
 
 class LightRunnersGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
@@ -22,13 +24,25 @@ class LightRunnersGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    playArea = Rect.fromLTWH(
-      screenMargin,
-      screenMargin,
-      size.x - 2 * screenMargin - scoreBoxWidth - 2 * scoreBoxMargin,
-      size.y - 2 * screenMargin,
+    await _createShips();
+    world = World();
+
+    cameraComponent = CameraComponent.withFixedResolution(
+      world: world,
+      width: fixedSize.x,
+      height: fixedSize.y,
     );
-    await add(GameBorder());
+    await add(cameraComponent);
+
+    playArea = Rect.fromLTWH(
+      screenMargin - fixedSize.x / 2,
+      screenMargin - fixedSize.y / 2,
+      fixedSize.x - 2 * screenMargin - scoreBoxWidth - 2 * scoreBoxMargin,
+      fixedSize.y - 2 * screenMargin,
+    );
+    await world.addAll([Background(), GameBorder(), ScorePanel()]);
+    await world.addAll([Spotlight(), ...ships.values]);
+    await add(world);
 
     await add(
       Timer(
@@ -37,7 +51,9 @@ class LightRunnersGame extends FlameGame
         },
       ),
     );
+  }
 
+  Future<void> _createShips() async {
     final gamepads = await Gamepads.list();
     gamepads.forEach((g) => print(g.id));
     ships = {
@@ -51,13 +67,6 @@ class LightRunnersGame extends FlameGame
     _subscription = Gamepads.events.listen((event) {
       ships[event.gamepadId]?.onGamepadEvent(event);
     });
-    await add(ScorePanel());
-
-    world = World(
-      children: [Spotlight(), ...ships.values],
-    );
-    cameraComponent = CameraComponent(world: world);
-    await addAll([world, cameraComponent]);
   }
 
   @override
