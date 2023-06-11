@@ -4,7 +4,6 @@ import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
 import 'package:flame/extensions.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
-import 'package:lightrunners/utils/utils.dart';
 
 const _radius = Radius.circular(5);
 
