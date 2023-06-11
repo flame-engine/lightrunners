@@ -21,6 +21,9 @@ class LightRunnersGame extends FlameGame
   late final Map<String, Ship> ships;
 
   StreamSubscription<GamepadEvent>? _subscription;
+  final void Function(Map<Color, int>) onEndGame;
+
+  LightRunnersGame(this.onEndGame);
 
   @override
   Future<void> onLoad() async {
@@ -44,10 +47,14 @@ class LightRunnersGame extends FlameGame
     await world.addAll([Spotlight(), ...ships.values]);
     await add(world);
 
+    late Timer timer;
     await add(
-      Timer(
+      timer = Timer(
         onTimeUp: () {
-          // TODO(erickzanardo): implement endgame.
+          timer.removeFromParent();
+          onEndGame({
+            for (final ship in ships.values) ship.paint.color: ship.score,
+          });
         },
       ),
     );

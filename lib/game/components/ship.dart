@@ -10,9 +10,9 @@ import 'package:lightrunners/ui/ui.dart';
 import 'package:lightrunners/utils/input_handler_utils.dart';
 
 final _shipColors =
-    GamePalette.values.map((color) => Paint()..color = color).toList();
+    GamePalette.shipValues.map((color) => Paint()..color = color).toList();
 
-final _shipSprites = [
+const shipSprites = [
   'crimson_fury.png',
   'star_chaser.png',
   'photon_raider.png',
@@ -51,7 +51,7 @@ class Ship extends SpriteComponent
           anchor: Anchor.center,
         ) {
     paint = _shipColors[playerNumber];
-    spritePath = _shipSprites[playerNumber];
+    spritePath = shipSprites[playerNumber];
   }
 
   final int playerNumber;

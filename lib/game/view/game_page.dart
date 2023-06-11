@@ -1,5 +1,6 @@
 import 'package:flame/game.dart' hide Route;
 import 'package:flutter/material.dart';
+import 'package:lightrunners/end_game/end_game.dart';
 import 'package:lightrunners/game/game.dart';
 
 class GamePage extends StatefulWidget {
@@ -21,7 +22,13 @@ class _GamePageState extends State<GamePage> {
   @override
   void initState() {
     super.initState();
-    _game = LightRunnersGame();
+    _game = LightRunnersGame(
+      (scores) {
+        Navigator.of(context).push(
+          EndGamePage.route(scores),
+        );
+      },
+    );
   }
 
   @override
