@@ -9,6 +9,8 @@ class GamePalette {
   static const blue = Color(0xFF3263E0);
   static const pink = Color(0xFFE032CF);
   static const silver = Color(0xFFCFCFCF);
+  static const black = Color(0xFF000000);
+  static const white = Color(0xFFFFFFFF);
 
   static const values = [
     red,
