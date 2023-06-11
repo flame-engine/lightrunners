@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lightrunners/end_game/view/view.dart';
-import 'package:lightrunners/game/game.dart';
+import 'package:lightrunners/game/view/lobby_page.dart';
 import 'package:lightrunners/title/title.dart';
 import 'package:lightrunners/ui/ui.dart';
 import 'package:lightrunners/widgets/controller_menu.dart';
@@ -26,7 +26,7 @@ class TitlePage extends StatelessWidget {
                   (
                     name: 'Start',
                     onPressed: () {
-                      Navigator.of(context).push(GamePage.route());
+                      Navigator.of(context).push(LobbyPage.route());
                     },
                   ),
                   (

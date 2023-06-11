@@ -13,13 +13,13 @@ class GamePalette {
   static const white = Color(0xFFFFFFFF);
 
   static const shipValues = [
-    red,
-    orange,
-    yellow,
-    green,
     lightBlue,
     blue,
     pink,
     silver,
+    red,
+    orange,
+    yellow,
+    green,
   ];
 }
