@@ -12,6 +12,7 @@ class Timer extends PositionComponent {
     required this.onTimeUp,
   }) : super(position: Vector2.all(32));
 
+  final _textPosition = Vector2(20, 15);
   int _timeLeft = _matchLength;
   late RRect rRect;
   late TextPaint textPaint;
@@ -62,7 +63,7 @@ class Timer extends PositionComponent {
     textPaint.render(
       canvas,
       'Time Left: $_timeLeft',
-      Vector2(20, 15),
+      _textPosition,
     );
   }
 }
