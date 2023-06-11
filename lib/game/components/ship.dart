@@ -176,6 +176,22 @@ class Ship extends SpriteComponent
     if (!engine.isZero()) {
       angle = -engine.angleToSigned(Vector2(0, -1));
     }
+
+    if (position.x + size.x < game.playArea.left) {
+      position.x = game.playArea.right;
+    }
+
+    if (position.x > game.playArea.right) {
+      position.x = game.playArea.left - size.x;
+    }
+
+    if (position.y + size.y < game.playArea.top) {
+      position.y = game.playArea.bottom;
+    }
+
+    if (position.y > game.playArea.bottom) {
+      position.y = game.playArea.top - size.y;
+    }
   }
 
   @override
