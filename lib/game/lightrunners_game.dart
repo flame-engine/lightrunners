@@ -43,6 +43,14 @@ class LightRunnersGame extends FlameGame
     await world.addAll([Background(), GameBorder(), ScorePanel()]);
     await world.addAll([Spotlight(), ...ships.values]);
     await add(world);
+
+    await add(
+      Timer(
+        onTimeUp: () {
+          // TODO(erickzanardo): implement endgame.
+        },
+      ),
+    );
   }
 
   Future<void> _createShips() async {
