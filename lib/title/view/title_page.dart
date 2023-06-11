@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lightrunners/end_game/view/view.dart';
+import 'package:lightrunners/end_game/view/end_game_page.dart';
 import 'package:lightrunners/game/view/lobby_page.dart';
 import 'package:lightrunners/title/title.dart';
 import 'package:lightrunners/ui/ui.dart';
