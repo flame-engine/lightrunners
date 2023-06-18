@@ -53,10 +53,11 @@ class Background extends PositionComponent with HasGameRef<LightRunnersGame> {
         });
     mesh = Delaunay.triangulate(points)
         .map((e) => e.translateBy(delta))
-        .map((triangle) => (
-              triangle: triangle,
-              shadeLevel: _r.nextInt(_numberShades),
-            ),
+        .map(
+          (triangle) => (
+            triangle: triangle,
+            shadeLevel: _r.nextInt(_numberShades),
+          ),
         )
         .toList();
   }

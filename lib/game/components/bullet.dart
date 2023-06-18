@@ -1,19 +1,32 @@
+import 'dart:ui';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/palette.dart';
 import 'package:lightrunners/game/game.dart';
 
 class Bullet extends CircleComponent with HasGameReference<LightRunnersGame> {
-  static final _paint = BasicPalette.white.paint();
   final int ownerPlayerNumber;
   final Vector2 velocity;
+  final Color color;
+
+  static const _radius = 8.0;
 
   Bullet({
     required this.ownerPlayerNumber,
     required super.position,
     required this.velocity,
-  }) : super(radius: 2.0, anchor: Anchor.center, paint: _paint);
+    required this.color,
+  }) : super(
+          radius: _radius,
+          anchor: Anchor.center,
+          paint: Paint()
+            ..color = color
+            ..maskFilter = const MaskFilter.blur(
+              BlurStyle.normal,
+              _radius / 2,
+            ),
+        );
 
   @override
   Future<void> onLoad() async {
@@ -29,7 +42,8 @@ class Bullet extends CircleComponent with HasGameReference<LightRunnersGame> {
       ..setFrom(velocity)
       ..scale(dt);
     position.add(_velocityTmp);
-    if (!game.cameraComponent.canSee(this)) {
+
+    if (!game.playArea.contains(position.toOffset())) {
       removeFromParent();
     }
   }
