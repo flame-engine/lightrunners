@@ -119,7 +119,7 @@ class Ship extends SpriteComponent
   void fire() {
     final bulletVector = Vector2(
       math.sin(angle),
-      math.cos(angle) * -1,
+      -math.cos(angle),
     )..normalized();
 
     game.world.add(
