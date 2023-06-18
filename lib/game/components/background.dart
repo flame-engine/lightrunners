@@ -56,7 +56,8 @@ class Background extends PositionComponent with HasGameRef<LightRunnersGame> {
         .map((triangle) => (
               triangle: triangle,
               shadeLevel: _r.nextInt(_numberShades),
-            ))
+            ),
+        )
         .toList();
   }
 
