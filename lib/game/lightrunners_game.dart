@@ -15,7 +15,7 @@ import 'package:lightrunners/utils/utils.dart';
 
 class LightRunnersGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
-  final List<String> players;
+  final List<String?> players;
   late final Rect playArea;
   late final CameraComponent cameraComponent;
   late final World world;
@@ -63,13 +63,15 @@ class LightRunnersGame extends FlameGame
 
   void _createShips() {
     ships = {
-      for (final player in players)
-        player: Ship(players.indexOf(player), player),
+      for (var i = 0; i < players.length; i++)
+        players[i] ?? 'keyboard_$i': Ship(i, players[i]),
     };
+
     if (ships.isEmpty) {
       print('No controllers found, using keyboard only');
       ships[''] = Ship(0, null);
     }
+
     _subscription = Gamepads.events.listen((event) {
       ships[event.gamepadId]?.onGamepadEvent(event);
     });
