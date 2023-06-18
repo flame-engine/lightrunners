@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lightrunners/game/view/game_page.dart';
@@ -19,12 +22,18 @@ class LobbyPage extends StatefulWidget {
 }
 
 class _LobbyPageState extends State<LobbyPage> {
-  final List<String> _players = [];
+  final List<String?> _players = [];
+
+  late StreamSubscription<GamepadEvent> _gamepadSubscription;
+  late final FocusNode _focusNode;
 
   @override
   void initState() {
     super.initState();
-    Gamepads.events.listen((GamepadEvent event) {
+
+    _focusNode = FocusNode()..requestFocus();
+
+    _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
       setState(() {
         if (event.key == '7' || event.key == 'line.horizontal.3.circle') {
           // The start key was pressed
@@ -37,6 +46,14 @@ class _LobbyPageState extends State<LobbyPage> {
   }
 
   @override
+  void dispose() {
+    _gamepadSubscription.cancel();
+    _focusNode.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     const centerTextStyle = TextStyle(
       color: GamePalette.lightBlue,
@@ -44,44 +61,57 @@ class _LobbyPageState extends State<LobbyPage> {
       fontWeight: FontWeight.bold,
     );
 
-    return ScreenScaffold(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              PlayerRectangle(id: 0, players: _players),
-              PlayerRectangle(id: 1, players: _players),
-              PlayerRectangle(id: 2, players: _players),
-              PlayerRectangle(id: 3, players: _players),
-            ],
-          ),
-          const Center(
-            child: Column(
+    return RawKeyboardListener(
+      focusNode: _focusNode,
+      onKey: (RawKeyEvent event) {
+        if (event.isKeyPressed(LogicalKeyboardKey.space)) {
+          setState(() {
+            _players.add(null);
+          });
+        } else if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
+          // The start key was pressed
+          Navigator.of(context).push(GamePage.route(players: _players));
+        }
+      },
+      child: ScreenScaffold(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Waiting for',
-                  style: centerTextStyle,
-                ),
-                Text(
-                  'players...',
-                  style: centerTextStyle,
-                ),
+                PlayerRectangle(id: 0, players: _players),
+                PlayerRectangle(id: 1, players: _players),
+                PlayerRectangle(id: 2, players: _players),
+                PlayerRectangle(id: 3, players: _players),
               ],
             ),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              PlayerRectangle(id: 4, players: _players),
-              PlayerRectangle(id: 5, players: _players),
-              PlayerRectangle(id: 6, players: _players),
-              PlayerRectangle(id: 7, players: _players),
-            ],
-          ),
-        ],
+            const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Waiting for',
+                    style: centerTextStyle,
+                  ),
+                  Text(
+                    'players...',
+                    style: centerTextStyle,
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                PlayerRectangle(id: 4, players: _players),
+                PlayerRectangle(id: 5, players: _players),
+                PlayerRectangle(id: 6, players: _players),
+                PlayerRectangle(id: 7, players: _players),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -89,7 +119,7 @@ class _LobbyPageState extends State<LobbyPage> {
 
 class PlayerRectangle extends StatelessWidget {
   final int id;
-  final List<String> players;
+  final List<String?> players;
 
   const PlayerRectangle({
     required this.id,

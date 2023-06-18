@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flame/collisions.dart';
@@ -9,6 +10,39 @@ import 'package:lightrunners/game/game.dart';
 import 'package:lightrunners/ui/ui.dart';
 import 'package:lightrunners/utils/gamepad_map.dart';
 import 'package:lightrunners/utils/input_handler_utils.dart';
+
+class _KeyboardControls {
+  const _KeyboardControls({
+    required this.up,
+    required this.left,
+    required this.down,
+    required this.right,
+    required this.shoot,
+  });
+
+  final LogicalKeyboardKey up;
+  final LogicalKeyboardKey left;
+  final LogicalKeyboardKey down;
+  final LogicalKeyboardKey right;
+  final LogicalKeyboardKey shoot;
+}
+
+const playerKeyboardControlsMapping = [
+  _KeyboardControls(
+    up: LogicalKeyboardKey.keyW,
+    left: LogicalKeyboardKey.keyA,
+    down: LogicalKeyboardKey.keyS,
+    right: LogicalKeyboardKey.keyD,
+    shoot: LogicalKeyboardKey.keyR,
+  ),
+  _KeyboardControls(
+    up: LogicalKeyboardKey.arrowUp,
+    left: LogicalKeyboardKey.arrowLeft,
+    down: LogicalKeyboardKey.arrowDown,
+    right: LogicalKeyboardKey.arrowRight,
+    shoot: LogicalKeyboardKey.keyM,
+  ),
+];
 
 final _shipColors =
     GamePalette.shipValues.map((color) => Paint()..color = color).toList();
@@ -54,11 +88,6 @@ class Ship extends SpriteComponent
           const GamepadLeftXAxis(),
           const GamepadLeftYAxis(),
         ),
-        shootJoystick = _makeJoystick(
-          gamepadId,
-          const GamepadRightXAxis(),
-          const GamepadRightYAxis(),
-        ),
         super(
           size: Vector2(40, 80),
           anchor: Anchor.center,
@@ -78,27 +107,26 @@ class Ship extends SpriteComponent
   final Vector2 acceleration = Vector2.zero();
 
   final GamepadJoystick? moveJoystick;
-  final GamepadJoystick? shootJoystick;
   final Vector2 move = Vector2.zero();
-  final Vector2 shoot = Vector2.zero();
 
   @override
   Future<void> onLoad() async {
     sprite = await game.loadSprite('ships/$spritePath');
     debugMode = true;
     add(RectangleHitbox());
-    add(TimerComponent(period: 0.2, repeat: true, onTick: fire));
   }
 
   void fire() {
-    if (shoot.isZero()) {
-      return;
-    }
+    final bulletVector = Vector2(
+      math.sin(angle),
+      math.cos(angle) * -1,
+    )..normalized();
+
     game.world.add(
       Bullet(
         ownerPlayerNumber: playerNumber,
-        position: position + (shoot..scaled(size.length2)),
-        velocity: shoot * _bulletSpeed,
+        position: position + (move..scaled(size.length2)),
+        velocity: bulletVector * _bulletSpeed,
       ),
     );
   }
@@ -108,32 +136,31 @@ class Ship extends SpriteComponent
     RawKeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
-    readArrowLikeKeysIntoVector2(
+    final keyboardControl = playerKeyboardControlsMapping[playerNumber];
+
+    if (event.isKeyPressed(keyboardControl.shoot)) {
+      fire();
+      return false;
+    }
+
+    return readArrowLikeKeysIntoVector2(
       event,
       keysPressed,
       move,
-      up: LogicalKeyboardKey.keyW,
-      left: LogicalKeyboardKey.keyA,
-      down: LogicalKeyboardKey.keyS,
-      right: LogicalKeyboardKey.keyD,
+      up: keyboardControl.up,
+      left: keyboardControl.left,
+      down: keyboardControl.down,
+      right: keyboardControl.right,
     );
-
-    readArrowLikeKeysIntoVector2(
-      event,
-      keysPressed,
-      shoot,
-      up: LogicalKeyboardKey.arrowUp,
-      left: LogicalKeyboardKey.arrowLeft,
-      down: LogicalKeyboardKey.arrowDown,
-      right: LogicalKeyboardKey.arrowRight,
-    );
-
-    return false;
   }
 
   void onGamepadEvent(GamepadEvent event) {
     _handleGamepadAxisInput(moveJoystick, event, move);
-    _handleGamepadAxisInput(shootJoystick, event, shoot);
+    _handleGamedpadShootEvent(event);
+  }
+
+  void _handleGamedpadShootEvent(GamepadEvent event) {
+    // TODO(all): Implement this, I don't have a gamepad to test with.
   }
 
   void _handleGamepadAxisInput(

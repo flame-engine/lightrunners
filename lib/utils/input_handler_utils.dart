@@ -40,7 +40,7 @@ class GamepadJoystick {
   }
 }
 
-void readArrowLikeKeysIntoVector2(
+bool readArrowLikeKeysIntoVector2(
   RawKeyEvent event,
   Set<LogicalKeyboardKey> keysPressed,
   Vector2 vector, {
@@ -58,6 +58,7 @@ void readArrowLikeKeysIntoVector2(
     } else {
       vector.y = 0;
     }
+    return false;
   } else if (event.logicalKey == down) {
     if (isDown) {
       vector.y = 1;
@@ -66,6 +67,7 @@ void readArrowLikeKeysIntoVector2(
     } else {
       vector.y = 0;
     }
+    return false;
   } else if (event.logicalKey == left) {
     if (isDown) {
       vector.x = -1;
@@ -74,6 +76,7 @@ void readArrowLikeKeysIntoVector2(
     } else {
       vector.x = 0;
     }
+    return false;
   } else if (event.logicalKey == right) {
     if (isDown) {
       vector.x = 1;
@@ -82,5 +85,7 @@ void readArrowLikeKeysIntoVector2(
     } else {
       vector.x = 0;
     }
+    return false;
   }
+  return true;
 }
