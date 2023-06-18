@@ -127,6 +127,7 @@ class Ship extends SpriteComponent
         ownerPlayerNumber: playerNumber,
         position: position + (move..scaled(size.length)),
         velocity: bulletVector * _bulletSpeed,
+        color: paint.color,
       ),
     );
   }
