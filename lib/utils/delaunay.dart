@@ -6,13 +6,6 @@ import 'package:lightrunners/utils/triangle2.dart';
 /// Uses the Bowyer-Watson algorithm to compute the Delaunay triangulation of
 /// a given set of points.
 class Delaunay {
-  static List<Triangle2> random(int n, Vector2 size) {
-    final points = List.generate(n, (_) {
-      return Vector2.random()..multiply(size);
-    });
-    return triangulate(points);
-  }
-
   static List<Triangle2> triangulate(List<Vector2> vertices) {
     final superTriangle = _computeSuperTriangle(vertices);
 
