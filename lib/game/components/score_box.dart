@@ -41,11 +41,10 @@ class ScoreBox extends PositionComponent with HasGameRef<LightRunnersGame> {
         super(position: targetPosition.clone());
 
   @override
-  FutureOr<void> onLoad() async {
+  void onLoad() {
     final availableHeight = gameRef.size.y - 2 * screenMargin;
     size = Vector2(scoreBoxWidth, availableHeight / maxShips - scoreBoxMargin);
     rRect = RRect.fromRectAndRadius(Vector2.zero() & size, _radius);
-    return super.onLoad();
   }
 
   @override

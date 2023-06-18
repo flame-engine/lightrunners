@@ -85,6 +85,7 @@ class Ship extends SpriteComponent
   @override
   Future<void> onLoad() async {
     sprite = await game.loadSprite('ships/$spritePath');
+    debugMode = true;
     add(RectangleHitbox());
     add(TimerComponent(period: 0.2, repeat: true, onTick: fire));
   }
@@ -154,8 +155,6 @@ class Ship extends SpriteComponent
 
   @override
   void update(double dt) {
-    super.update(dt);
-
     // TODO(any): Restrict movement to only allow ship to be within screen.
 
     final dt2 = dt * dt;

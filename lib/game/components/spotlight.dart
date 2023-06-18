@@ -31,7 +31,7 @@ class Spotlight extends PositionComponent
   double targetChangeCounter = 0.0;
 
   @override
-  Future<void> onLoad() async {
+  void onLoad() {
     updateRandomTarget();
     _updateColor();
   }
