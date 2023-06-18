@@ -125,7 +125,7 @@ class Ship extends SpriteComponent
     game.world.add(
       Bullet(
         ownerPlayerNumber: playerNumber,
-        position: position + (move..scaled(size.length2)),
+        position: position + (move..scaled(size.length)),
         velocity: bulletVector * _bulletSpeed,
       ),
     );
