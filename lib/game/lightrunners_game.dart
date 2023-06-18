@@ -48,11 +48,11 @@ class LightRunnersGame extends FlameGame
     await world.addAll([Spotlight(), ...ships.values]);
     await add(world);
 
-    late Timer timer;
+    late CountDown countDown;
     await add(
-      timer = Timer(
+      countDown = CountDown(
         onTimeUp: () {
-          timer.removeFromParent();
+          countDown.removeFromParent();
           onEndGame({
             for (final ship in ships.values) ship.paint.color: ship.score,
           });

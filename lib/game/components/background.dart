@@ -27,7 +27,7 @@ class Background extends PositionComponent with HasGameRef<LightRunnersGame> {
   }
 
   @override
-  Future<void> onLoad() async {
+  void onLoad() {
     final size = gameRef.playArea.inflate(_margin).size.toVector2();
     final delta = Vector2.all(-_margin / 2);
 
@@ -40,8 +40,6 @@ class Background extends PositionComponent with HasGameRef<LightRunnersGame> {
         });
     triangles =
         Delaunay.triangulate(points).map((e) => e.translateBy(delta)).toList();
-
-    return super.onLoad();
   }
 
   @override

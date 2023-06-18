@@ -5,15 +5,15 @@ import 'package:lightrunners/utils/constants.dart';
 
 class ScorePanel extends PositionComponent with HasGameRef<LightRunnersGame> {
   @override
-  Future<void> onLoad() async {
-    final promises = gameRef.ships.values.map((ship) {
-      return ScoreBox(
-        shipRef: ship,
-        targetPosition: _computeTarget(ship.playerNumber),
-      );
-    }).map((e) async => await add(e));
-    await Future.wait(promises);
-    return super.onLoad();
+  void onLoad() {
+    addAll(
+      gameRef.ships.values.map(
+        (ship) => ScoreBox(
+          shipRef: ship,
+          targetPosition: _computeTarget(ship.playerNumber),
+        ),
+      ),
+    );
   }
 
   Vector2 _computeTarget(int idx) {
