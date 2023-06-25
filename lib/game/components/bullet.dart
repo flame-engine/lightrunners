@@ -39,8 +39,7 @@ class Bullet extends CircleComponent with HasGameReference<LightRunnersGame> {
       ..scale(dt);
     position.add(_velocityTmp);
 
-    final playArea = game.playArea;
-    if (position.x > playArea.width || position.y > playArea.height) {
+    if (!game.playArea.contains(position.toOffset())) {
       removeFromParent();
     }
   }

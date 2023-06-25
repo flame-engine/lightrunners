@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/extensions.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
 import 'package:lightrunners/ui/palette.dart';
@@ -24,7 +25,8 @@ typedef ShadedTriangle = ({
   int shadeLevel,
 });
 
-class Background extends PositionComponent with HasGameRef<LightRunnersGame> {
+class Background extends PositionComponent
+    with HasGameReference<LightRunnersGame> {
   late Rect clipArea;
   late List<ShadedTriangle> mesh;
 
@@ -34,17 +36,17 @@ class Background extends PositionComponent with HasGameRef<LightRunnersGame> {
   void onGameResize(Vector2 gameSize) {
     super.onGameResize(gameSize);
 
-    position = gameRef.playArea.topLeft.toVector2();
-    size = gameRef.playArea.size.toVector2();
+    position = game.playArea.topLeft.toVector2();
+    size = game.playArea.size.toVector2();
     clipArea = Vector2.zero() & size;
   }
 
   @override
   void onLoad() {
-    final size = gameRef.playArea.inflate(_margin).size.toVector2();
+    final size = game.playArea.inflate(_margin).size.toVector2();
     final delta = Vector2.all(-_margin / 2);
 
-    final fixedPointsGrid = gameRef.playArea.inflate(10.0).toFlameRectangle();
+    final fixedPointsGrid = game.playArea.inflate(10.0).toFlameRectangle();
     final fixedPoints = fixedPointsGrid.vertices +
         fixedPointsGrid.edges.map(lineMidPoint).toList();
     final points = fixedPoints +
@@ -84,8 +86,7 @@ class Background extends PositionComponent with HasGameRef<LightRunnersGame> {
   }
 
   (int, int, int) _computeTargetColor() {
-    final sortedShips =
-        gameRef.ships.values.sortedBy<num>((ship) => -ship.score);
+    final sortedShips = game.ships.values.sortedBy<num>((ship) => -ship.score);
     final maxScore = sortedShips.first.score;
     if (maxScore == 0) {
       return _fromColor(_emptyColor);

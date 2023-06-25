@@ -15,7 +15,8 @@ const _radius = Radius.circular(5);
 const _rotationSpeed = 1.0;
 final _white = BasicPalette.white.color;
 
-class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
+class GameBorder extends PositionComponent
+    with HasGameReference<LightRunnersGame> {
   final paint = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 8;
@@ -33,11 +34,11 @@ class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
   void onGameResize(Vector2 gameSize) {
     super.onGameResize(gameSize);
 
-    position = gameRef.playArea.topLeft.toVector2();
-    size = gameRef.playArea.size.toVector2();
+    position = game.playArea.topLeft.toVector2();
+    size = game.playArea.size.toVector2();
     rRect = RRect.fromRectAndRadius(Vector2.zero() & size, _radius);
 
-    clipArea = gameRef.playArea.inflate(200.0).toFlameRectangle();
+    clipArea = game.playArea.inflate(200.0).toFlameRectangle();
     clipAreaCenter = clipArea.center;
   }
 
