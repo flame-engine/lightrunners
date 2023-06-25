@@ -29,14 +29,14 @@ class ScoreBox extends PositionComponent with HasGameRef<LightRunnersGame> {
   final TextPaint textPaint;
   final Paint paint;
   final Vector2 targetPosition;
-  final Ship shipRef;
+  final Ship ship;
 
   ScoreBox({
-    required this.shipRef,
-    required this.targetPosition,
-  })  : paint = _makePaint(shipRef.paint.color),
-        textPaint = _makeTextPaint(shipRef.paint.color),
-        super(position: targetPosition.clone());
+    required this.ship,
+    required super.position,
+  })  : paint = _makePaint(ship.paint.color),
+        textPaint = _makeTextPaint(ship.paint.color),
+        targetPosition = position!;
 
   @override
   void onLoad() {
@@ -57,7 +57,7 @@ class ScoreBox extends PositionComponent with HasGameRef<LightRunnersGame> {
     canvas.drawRRect(rRect, paint);
     textPaint.render(
       canvas,
-      shipRef.score.toString(),
+      ship.score.toString(),
       size / 2,
       anchor: Anchor.center,
     );

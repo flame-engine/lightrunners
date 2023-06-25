@@ -27,6 +27,8 @@ class GameBorder extends PositionComponent with HasGameRef<LightRunnersGame> {
   /// The phase of rotation
   double _phi = 0.0;
 
+  GameBorder() : super(priority: 1);
+
   @override
   void onGameResize(Vector2 gameSize) {
     super.onGameResize(gameSize);

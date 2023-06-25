@@ -1,27 +1,28 @@
+import 'dart:ui';
+
 import 'package:flame/components.dart';
 import 'package:lightrunners/game/components/score_box.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
+import 'package:lightrunners/ui/palette.dart';
 import 'package:lightrunners/utils/constants.dart';
 
-class ScorePanel extends PositionComponent with HasGameRef<LightRunnersGame> {
+class ScorePanel extends RectangleComponent with HasGameRef<LightRunnersGame> {
   @override
   void onLoad() {
+    position = Vector2(game.cameraComponent.viewport.size.x - scoreBoxWidth, 0);
+    size = Vector2(scoreBoxWidth, game.cameraComponent.viewport.size.y);
+    paint = Paint()..color = GamePalette.black;
     addAll(
       gameRef.ships.values.map(
         (ship) => ScoreBox(
-          shipRef: ship,
-          targetPosition: _computeTarget(ship.playerNumber),
+          ship: ship,
+          position: _computeTarget(ship.playerNumber),
         ),
       ),
     );
   }
 
   Vector2 _computeTarget(int idx) {
-    return Vector2(
-      gameRef.playArea.right + scoreBoxMargin,
-      gameRef.playArea.top +
-          idx * (gameRef.playArea.height / maxShips) +
-          scoreBoxMargin * idx,
-    );
+    return Vector2(0, idx * (size.y / maxShips) + scoreBoxMargin * idx);
   }
 }
