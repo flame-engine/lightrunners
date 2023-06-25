@@ -20,7 +20,7 @@ class Spotlight extends CircleComponent
   Spotlight() : super(radius: _spotlightRadius, anchor: Anchor.center);
 
   final List<Ship> currentShips = [];
-  Ship? get currentShip => currentShips.firstOrNull;
+  Ship? get activeShip => currentShips.length == 1 ? currentShips.first : null;
   late final TimerComponent _scoreTimer;
   late final Rect _visibleArea;
 
@@ -39,7 +39,7 @@ class Spotlight extends CircleComponent
       period: 1.0,
       repeat: true,
       autoStart: false,
-      onTick: () => currentShip?.score++,
+      onTick: () => currentShips.firstOrNull?.score++,
     );
     _visibleArea = game.playArea.deflate(_spotlightRadius);
     addAll([CircleHitbox(isSolid: true), _scoreTimer]);
@@ -63,23 +63,23 @@ class Spotlight extends CircleComponent
     if (other is Ship) {
       currentShips.add(other);
     }
-    if (currentShip == other) {
-      _updateColor();
-      _scoreTimer.timer.start();
-    }
+    _updateColor();
+    _updateTimerState();
   }
 
   @override
   void onCollisionEnd(PositionComponent other) {
     super.onCollisionEnd(other);
-    if (currentShip == other) {
-      currentShips.remove(other);
-      _updateColor();
-      if (currentShips.isEmpty) {
-        _scoreTimer.timer.stop();
-      }
+    currentShips.remove(other);
+    _updateColor();
+    _updateTimerState();
+  }
+
+  void _updateTimerState() {
+    if (currentShips.length == 1) {
+      _scoreTimer.timer.start();
     } else {
-      currentShips.remove(other);
+      _scoreTimer.timer.stop();
     }
   }
 
@@ -101,7 +101,7 @@ class Spotlight extends CircleComponent
   }
 
   void _updateColor() {
-    final baseColor = currentShip?.paint.color ?? BasicPalette.white.color;
+    final baseColor = activeShip?.paint.color ?? BasicPalette.white.color;
     paint.color = baseColor.withOpacity(0.5);
   }
 }
