@@ -49,13 +49,13 @@ final _shipColors =
 
 final shipSprites = [
   'netunos_wrath.png',
-  'andromedas_revenge.png',
   'purple_haze.png',
   'silver_bullet.png',
   'crimson_fury.png',
   'star_chaser.png',
   'photon_raider.png',
   'dagger_of_venus.png',
+  'andromedas_revenge.png',
 ];
 
 GamepadJoystick? _makeJoystick(
@@ -125,7 +125,7 @@ class Ship extends SpriteComponent
     game.world.add(
       Bullet(
         ownerPlayerNumber: playerNumber,
-        position: position + (move..scaled(size.length)),
+        position: positionOfAnchor(Anchor.topCenter),
         velocity: bulletVector * _bulletSpeed,
         color: paint.color,
       ),
@@ -161,7 +161,14 @@ class Ship extends SpriteComponent
   }
 
   void _handleGamedpadShootEvent(GamepadEvent event) {
-    // TODO(all): Implement this, I don't have a gamepad to test with.
+    final isAButton =
+        event.key == '0' && event.value == 1.0 && event.type == KeyType.button;
+    final isR1Button =
+        event.key == '5' && event.value > 10000 && event.type == KeyType.analog;
+
+    if (isAButton || isR1Button) {
+      fire();
+    }
   }
 
   void _handleGamepadAxisInput(
@@ -244,7 +251,7 @@ class Ship extends SpriteComponent
       if (other.ownerPlayerNumber == playerNumber) {
         return;
       }
-      // TODO(any): Affect velocity by getting shot
+      velocity.add(other.velocity..scale(0.1));
       other.removeFromParent();
     } else if (other is Ship) {
       // TODO(any): Don't let ships overlap

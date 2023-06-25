@@ -30,15 +30,15 @@ class _LobbyPageState extends State<LobbyPage> {
   @override
   void initState() {
     super.initState();
-
     _focusNode = FocusNode()..requestFocus();
 
     _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
       setState(() {
-        if (event.key == '7' || event.key == 'line.horizontal.3.circle') {
+        if ((event.key == '7' || event.key == 'line.horizontal.3.circle') &&
+            event.value == 1.0) {
           // The start key was pressed
           Navigator.of(context).push(GamePage.route(players: _players));
-        } else if (!_players.contains(event.gamepadId)) {
+        } else if (!_players.contains(event.gamepadId) && event.key == '0') {
           _players.add(event.gamepadId);
         }
       });
