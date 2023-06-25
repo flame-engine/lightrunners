@@ -1,9 +1,11 @@
-import 'dart:math' as math;
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame/extensions.dart';
+import 'package:flame/geometry.dart';
 import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:lightrunners/game/game.dart';
@@ -81,6 +83,7 @@ class Ship extends SpriteComponent
   static const _engine = 125.0;
   static const _drag = 5.0;
   static const _bulletSpeed = 300.0;
+  static final _rng = Random();
 
   Ship(this.playerNumber, this.gamepadId)
       : moveJoystick = _makeJoystick(
@@ -112,15 +115,16 @@ class Ship extends SpriteComponent
   @override
   Future<void> onLoad() async {
     sprite = await game.loadSprite('ships/$spritePath');
+    position = Vector2.random(_rng)
+      ..multiply(game.playArea.toVector2() / 2)
+      ..multiply(Vector2(_rng.nextBool() ? 1 : -1, _rng.nextBool() ? 1 : -1));
+    angle = _rng.nextDouble() * tau;
     debugMode = true;
     add(RectangleHitbox());
   }
 
   void fire() {
-    final bulletVector = Vector2(
-      math.sin(angle),
-      -math.cos(angle),
-    )..normalized();
+    final bulletVector = Vector2(sin(angle), -cos(angle))..normalized();
 
     game.world.add(
       Bullet(
