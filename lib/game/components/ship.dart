@@ -83,7 +83,7 @@ class Ship extends SpriteComponent
   static const _engine = 125.0;
   static const _drag = 5.0;
   static const _bulletSpeed = 300.0;
-  static final _rng = Random();
+  static final _random = Random();
 
   Ship(this.playerNumber, this.gamepadId)
       : moveJoystick = _makeJoystick(
@@ -91,10 +91,7 @@ class Ship extends SpriteComponent
           const GamepadLeftXAxis(),
           const GamepadLeftYAxis(),
         ),
-        super(
-          size: Vector2(40, 80),
-          anchor: Anchor.center,
-        ) {
+        super(size: Vector2(40, 80), anchor: Anchor.center) {
     paint = _shipColors[playerNumber];
     spritePath = shipSprites[playerNumber];
   }
@@ -111,14 +108,17 @@ class Ship extends SpriteComponent
 
   final GamepadJoystick? moveJoystick;
   final Vector2 move = Vector2.zero();
+  late final double _halfDiagonal;
 
   @override
   Future<void> onLoad() async {
+    _halfDiagonal = size.length / 2;
     sprite = await game.loadSprite('ships/$spritePath');
-    position = Vector2.random(_rng)
+    position = Vector2.random(_random)
       ..multiply(game.playArea.toVector2() / 2)
-      ..multiply(Vector2(_rng.nextBool() ? 1 : -1, _rng.nextBool() ? 1 : -1));
-    angle = _rng.nextDouble() * tau;
+      ..multiply(
+          Vector2(_random.nextBool() ? 1 : -1, _random.nextBool() ? 1 : -1));
+    angle = _random.nextDouble() * tau;
     debugMode = true;
     add(RectangleHitbox());
   }
@@ -228,20 +228,20 @@ class Ship extends SpriteComponent
       angle = -engine.angleToSigned(Vector2(0, -1));
     }
 
-    if (position.x + size.x < game.playArea.left) {
+    if (position.x + _halfDiagonal < game.playArea.left) {
       position.x = game.playArea.right;
     }
 
-    if (position.x > game.playArea.right) {
-      position.x = game.playArea.left - size.x;
+    if (position.x - _halfDiagonal > game.playArea.right) {
+      position.x = game.playArea.left - _halfDiagonal;
     }
 
-    if (position.y + size.y < game.playArea.top) {
+    if (position.y + _halfDiagonal < game.playArea.top) {
       position.y = game.playArea.bottom;
     }
 
-    if (position.y > game.playArea.bottom) {
-      position.y = game.playArea.top - size.y;
+    if (position.y - _halfDiagonal > game.playArea.bottom) {
+      position.y = game.playArea.top - _halfDiagonal;
     }
   }
 
