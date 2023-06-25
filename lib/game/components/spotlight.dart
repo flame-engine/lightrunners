@@ -1,8 +1,9 @@
 import 'dart:math';
+import 'dart:ui';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
-import 'package:flame/extensions.dart';
 import 'package:flame/palette.dart';
 import 'package:lightrunners/game/components/ship.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
@@ -14,24 +15,35 @@ const _targetChangeProbability = 0.05; // per [_targetChangePeriod]
 const _targetChangePeriod = 0.5; // seconds
 final _random = Random();
 
-class Spotlight extends PositionComponent
-    with HasGameReference<LightRunnersGame>, HasPaint {
-  Spotlight()
-      : super(
-          size: Vector2.all(_spotlightRadius * 2),
-          anchor: Anchor.center,
-        );
+class Spotlight extends CircleComponent
+    with HasGameReference<LightRunnersGame>, CollisionCallbacks {
+  Spotlight() : super(radius: _spotlightRadius, anchor: Anchor.center);
 
-  double scoringCounter = 0.0;
-  Ship? currentShipRef;
+  final List<Ship> currentShips = [];
+  Ship? get activeShip => currentShips.length == 1 ? currentShips.first : null;
+  late final TimerComponent _scoreTimer;
+  late final Rect _visibleArea;
 
   final Vector2 target = Vector2.zero();
-  final _renderPosition = Vector2.all(_spotlightRadius).toOffset();
   double targetChangeCounter = 0.0;
 
   @override
-  void onLoad() {
-    updateRandomTarget();
+  Future<void> onLoad() async {
+    super.onLoad();
+    paint = Paint()
+      ..maskFilter = MaskFilter.blur(
+        BlurStyle.normal,
+        radius / 10,
+      );
+    _scoreTimer = TimerComponent(
+      period: 1.0,
+      repeat: true,
+      autoStart: false,
+      onTick: () => currentShips.firstOrNull?.score++,
+    );
+    _visibleArea = game.playArea.deflate(_spotlightRadius);
+    addAll([CircleHitbox(isSolid: true), _scoreTimer]);
+    _updateRandomTarget();
     _updateColor();
   }
 
@@ -40,9 +52,42 @@ class Spotlight extends PositionComponent
     super.update(dt);
     _maybeUpdateTarget(dt);
     moveTowards(position, target, _spotlightSpeed * dt);
+  }
 
-    _updateCurrentShip();
-    _computeScoring(dt);
+  @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    super.onCollisionStart(intersectionPoints, other);
+    if (other is Ship) {
+      currentShips.add(other);
+    }
+    _updateColor();
+    _updateTimerState();
+  }
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
+    currentShips.remove(other);
+    _updateColor();
+    _updateTimerState();
+  }
+
+  void _updateTimerState() {
+    if (currentShips.length == 1) {
+      _scoreTimer.timer.start();
+    } else {
+      _scoreTimer.timer.stop();
+    }
+  }
+
+  void _updateRandomTarget() {
+    target.setValues(
+      -_visibleArea.width / 2 + _random.nextDouble() * _visibleArea.width,
+      -_visibleArea.height / 2 + _random.nextDouble() * _visibleArea.height,
+    );
   }
 
   void _maybeUpdateTarget(double dt) {
@@ -50,59 +95,13 @@ class Spotlight extends PositionComponent
     while (targetChangeCounter > _targetChangePeriod) {
       targetChangeCounter -= _targetChangePeriod;
       if (_random.nextDouble() <= _targetChangeProbability) {
-        updateRandomTarget();
+        _updateRandomTarget();
       }
     }
   }
 
-  void _computeScoring(double dt) {
-    scoringCounter += dt;
-    while (scoringCounter > 1.0) {
-      scoringCounter -= 1.0;
-      currentShipRef?.score++;
-    }
-  }
-
   void _updateColor() {
-    final baseColor = currentShipRef?.paint.color ?? BasicPalette.white.color;
+    final baseColor = activeShip?.paint.color ?? BasicPalette.white.color;
     paint.color = baseColor.withOpacity(0.5);
-  }
-
-  void _updateCurrentShip() {
-    final newShip = _decideCurrentShip();
-    if (newShip?.playerNumber != currentShipRef?.playerNumber) {
-      currentShipRef = newShip;
-      scoringCounter = 0.0;
-    }
-    _updateColor();
-  }
-
-  Ship? _decideCurrentShip() {
-    final inside = game.ships.values.where((ship) {
-      final distance = ship.absolutePosition.distanceTo(absolutePosition);
-      return distance < _spotlightRadius;
-    });
-    if (inside.length == 1) {
-      return inside.first;
-    } else {
-      return null;
-    }
-  }
-
-  void updateRandomTarget() {
-    final rect = game.playArea.deflate(_spotlightRadius);
-    final x = -rect.width / 2 + _random.nextDouble() * rect.width;
-    final y = -rect.height / 2 + _random.nextDouble() * rect.height;
-    target.setValues(x, y);
-  }
-
-  @override
-  void render(Canvas canvas) {
-    super.render(canvas);
-    canvas.drawCircle(
-      _renderPosition,
-      _spotlightRadius,
-      paint,
-    );
   }
 }

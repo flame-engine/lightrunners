@@ -36,7 +36,7 @@ class LightRunnersGame extends FlameGame
       width: fixedSize.x,
       height: fixedSize.y,
     );
-    await add(cameraComponent);
+    add(cameraComponent);
 
     playArea = Rect.fromLTWH(
       screenMargin - fixedSize.x / 2,
@@ -44,9 +44,10 @@ class LightRunnersGame extends FlameGame
       fixedSize.x - 2 * screenMargin - scoreBoxWidth - 2 * scoreBoxMargin,
       fixedSize.y - 2 * screenMargin,
     );
-    await world.addAll([Background(), GameBorder(), ScorePanel()]);
-    await world.addAll([Spotlight(), ...ships.values]);
-    await add(world);
+    cameraComponent.viewport.add(ScorePanel());
+    world.addAll([Background(), GameBorder()]);
+    world.addAll([Spotlight(), ...ships.values]);
+    add(world);
 
     late CountDown countDown;
     await add(

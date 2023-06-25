@@ -1,9 +1,11 @@
-import 'dart:math' as math;
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame/extensions.dart';
+import 'package:flame/geometry.dart';
 import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:lightrunners/game/game.dart';
@@ -49,13 +51,13 @@ final _shipColors =
 
 final shipSprites = [
   'netunos_wrath.png',
-  'andromedas_revenge.png',
   'purple_haze.png',
   'silver_bullet.png',
   'crimson_fury.png',
   'star_chaser.png',
   'photon_raider.png',
   'dagger_of_venus.png',
+  'andromedas_revenge.png',
 ];
 
 GamepadJoystick? _makeJoystick(
@@ -81,6 +83,7 @@ class Ship extends SpriteComponent
   static const _engine = 125.0;
   static const _drag = 5.0;
   static const _bulletSpeed = 300.0;
+  static final _random = Random();
 
   Ship(this.playerNumber, this.gamepadId)
       : moveJoystick = _makeJoystick(
@@ -88,10 +91,7 @@ class Ship extends SpriteComponent
           const GamepadLeftXAxis(),
           const GamepadLeftYAxis(),
         ),
-        super(
-          size: Vector2(40, 80),
-          anchor: Anchor.center,
-        ) {
+        super(size: Vector2(40, 80), anchor: Anchor.center) {
     paint = _shipColors[playerNumber];
     spritePath = shipSprites[playerNumber];
   }
@@ -108,24 +108,29 @@ class Ship extends SpriteComponent
 
   final GamepadJoystick? moveJoystick;
   final Vector2 move = Vector2.zero();
+  late final double _halfDiagonal;
 
   @override
   Future<void> onLoad() async {
+    _halfDiagonal = size.length / 2;
     sprite = await game.loadSprite('ships/$spritePath');
+    position = Vector2.random(_random)
+      ..multiply(game.playArea.toVector2() / 2)
+      ..multiply(
+        Vector2(_random.nextBool() ? 1 : -1, _random.nextBool() ? 1 : -1),
+      );
+    angle = _random.nextDouble() * tau;
     debugMode = true;
     add(RectangleHitbox());
   }
 
   void fire() {
-    final bulletVector = Vector2(
-      math.sin(angle),
-      -math.cos(angle),
-    )..normalized();
+    final bulletVector = Vector2(sin(angle), -cos(angle))..normalized();
 
     game.world.add(
       Bullet(
         ownerPlayerNumber: playerNumber,
-        position: position + (move..scaled(size.length)),
+        position: positionOfAnchor(Anchor.topCenter),
         velocity: bulletVector * _bulletSpeed,
         color: paint.color,
       ),
@@ -161,7 +166,14 @@ class Ship extends SpriteComponent
   }
 
   void _handleGamedpadShootEvent(GamepadEvent event) {
-    // TODO(all): Implement this, I don't have a gamepad to test with.
+    final isAButton =
+        event.key == '0' && event.value == 1.0 && event.type == KeyType.button;
+    final isR1Button =
+        event.key == '5' && event.value > 10000 && event.type == KeyType.analog;
+
+    if (isAButton || isR1Button) {
+      fire();
+    }
   }
 
   void _handleGamepadAxisInput(
@@ -217,20 +229,20 @@ class Ship extends SpriteComponent
       angle = -engine.angleToSigned(Vector2(0, -1));
     }
 
-    if (position.x + size.x < game.playArea.left) {
+    if (position.x + _halfDiagonal < game.playArea.left) {
       position.x = game.playArea.right;
     }
 
-    if (position.x > game.playArea.right) {
-      position.x = game.playArea.left - size.x;
+    if (position.x - _halfDiagonal > game.playArea.right) {
+      position.x = game.playArea.left - _halfDiagonal;
     }
 
-    if (position.y + size.y < game.playArea.top) {
+    if (position.y + _halfDiagonal < game.playArea.top) {
       position.y = game.playArea.bottom;
     }
 
-    if (position.y > game.playArea.bottom) {
-      position.y = game.playArea.top - size.y;
+    if (position.y - _halfDiagonal > game.playArea.bottom) {
+      position.y = game.playArea.top - _halfDiagonal;
     }
   }
 
@@ -244,7 +256,7 @@ class Ship extends SpriteComponent
       if (other.ownerPlayerNumber == playerNumber) {
         return;
       }
-      // TODO(any): Affect velocity by getting shot
+      velocity.add(other.velocity..scale(0.1));
       other.removeFromParent();
     } else if (other is Ship) {
       // TODO(any): Don't let ships overlap

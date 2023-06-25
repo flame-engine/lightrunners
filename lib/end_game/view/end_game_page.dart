@@ -26,7 +26,7 @@ class EndGamePage extends StatelessWidget {
       ..sort((a, b) => b.value.compareTo(a.value));
 
     const baseSize = 64;
-    const bagdes = [
+    const badges = [
       'gold.png',
       'silver.png',
       'bronze.png',
@@ -89,7 +89,7 @@ class EndGamePage extends StatelessWidget {
                                 baseSize *
                                 4,
                             child: Image.asset(
-                              'assets/images/${bagdes[i]}',
+                              'assets/images/${badges[i]}',
                             ),
                           ),
                         ],

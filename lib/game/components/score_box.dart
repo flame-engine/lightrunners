@@ -1,4 +1,5 @@
 import 'package:flame/components.dart';
+import 'package:flame/experimental.dart';
 import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lightrunners/game/components/ship.dart';
@@ -24,7 +25,8 @@ TextPaint _makeTextPaint(Color color) {
   );
 }
 
-class ScoreBox extends PositionComponent with HasGameRef<LightRunnersGame> {
+class ScoreBox extends PositionComponent
+    with HasGameReference<LightRunnersGame> {
   late RRect rRect;
   final TextPaint textPaint;
   final Paint paint;
@@ -33,14 +35,14 @@ class ScoreBox extends PositionComponent with HasGameRef<LightRunnersGame> {
 
   ScoreBox({
     required this.shipRef,
-    required this.targetPosition,
+    required super.position,
   })  : paint = _makePaint(shipRef.paint.color),
         textPaint = _makeTextPaint(shipRef.paint.color),
-        super(position: targetPosition.clone());
+        targetPosition = position!;
 
   @override
   void onLoad() {
-    final availableHeight = gameRef.size.y - 2 * screenMargin;
+    final availableHeight = game.size.y - 2 * screenMargin;
     size = Vector2(scoreBoxWidth, availableHeight / maxShips - scoreBoxMargin);
     rRect = RRect.fromRectAndRadius(Vector2.zero() & size, _radius);
   }
