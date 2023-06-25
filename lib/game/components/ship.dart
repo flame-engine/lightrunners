@@ -117,7 +117,8 @@ class Ship extends SpriteComponent
     position = Vector2.random(_random)
       ..multiply(game.playArea.toVector2() / 2)
       ..multiply(
-          Vector2(_random.nextBool() ? 1 : -1, _random.nextBool() ? 1 : -1));
+        Vector2(_random.nextBool() ? 1 : -1, _random.nextBool() ? 1 : -1),
+      );
     angle = _random.nextDouble() * tau;
     debugMode = true;
     add(RectangleHitbox());
