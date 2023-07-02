@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://flame-engine.org">
-    <img alt="flame" width="200px" src="./assets/images/lightrunners.png">
+    <img alt="Lightrunners logo" width="400px" src="./assets/images/lightrunners.png">
   </a>
 </p>
 
