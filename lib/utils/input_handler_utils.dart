@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flame/extensions.dart';
 import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:lightrunners/utils/gamepad_map.dart';
-
-const _joystickAxisMaxValue = 32767;
 
 class GamepadJoystick {
   final String gamepadId;
