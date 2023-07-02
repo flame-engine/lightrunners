@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:lightrunners/end_game/view/end_game_page.dart';
+import 'package:lightrunners/leaderboard/view/view.dart';
 import 'package:lightrunners/lobby/view/lobby_page.dart';
 import 'package:lightrunners/title/title.dart';
-import 'package:lightrunners/ui/ui.dart';
 import 'package:lightrunners/widgets/controller_menu.dart';
 import 'package:lightrunners/widgets/screen_scaffold.dart';
 
@@ -40,14 +39,7 @@ class TitlePage extends StatelessWidget {
                     name: 'LeaderBoard',
                     onPressed: () {
                       Navigator.of(context).pushReplacement(
-                        EndGamePage.route(
-                          {
-                            GamePalette.blue: 100,
-                            GamePalette.green: 90,
-                            GamePalette.lightBlue: 50,
-                            GamePalette.pink: 20,
-                          },
-                        ),
+                        LeaderboardPage.route(),
                       );
                     },
                   ),
