@@ -8,7 +8,6 @@ import 'package:flame/extensions.dart';
 import 'package:flame/geometry.dart';
 import 'package:flame/palette.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
-import 'package:lightrunners/ui/ui.dart';
 import 'package:lightrunners/utils/flame_utils.dart';
 
 const _radius = Radius.circular(5);
@@ -65,13 +64,8 @@ class GameBorder extends PositionComponent
   }
 
   List<(Color, Path)> _generateBorderClips(Rectangle clipArea) {
-    var ships = game.ships.values.map((ship) => (ship.paint.color, ship.score));
-    // TODO(luan): remove this mock once we have more ships
-    ships = [
-      (GamePalette.red, 5),
-      (GamePalette.green, 2),
-      (GamePalette.lightBlue, 1),
-    ];
+    final ships =
+        game.ships.values.map((ship) => (ship.paint.color, ship.score));
     final topShips = ships.sortedBy<num>((e) => -e.$2).take(3);
     final totalScore = topShips.map((e) => e.$2).sum;
     final best = topShips.first;
