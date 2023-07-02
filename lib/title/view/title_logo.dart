@@ -47,7 +47,7 @@ class TitleLogo extends Phased<int> {
               },
               defaultValue: 0,
             ),
-            child: Image.asset('assets/images/logo_writting.png'),
+            child: Image.asset('assets/images/logo_writing.png'),
           ),
         ],
       ),
