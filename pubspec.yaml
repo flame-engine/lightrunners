@@ -13,6 +13,7 @@ dependencies:
   flame_audio: ^2.0.3
   flutter:
     sdk: flutter
+  flutter_shaders: ^0.1.2
   gamepads: ^0.1.1
   google_fonts: ^4.0.4
   phased: ^0.0.3
@@ -27,6 +28,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: false
+  shaders:
+    - shaders/super_crt.glsl
+    - shaders/bloom.glsl
   assets:
     - google_fonts/
     - assets/images/
