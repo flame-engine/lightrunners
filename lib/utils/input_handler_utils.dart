@@ -24,17 +24,11 @@ class GamepadJoystick {
       return;
     }
 
-    var intensity = Platform.isMacOS
-        ? event.value
-        : (event.value / _joystickAxisMaxValue).clamp(-1.0, 1.0);
+    final intensity = GamepadAnalogAxis.normalizedIntensity(event);
 
-    if (intensity.abs() < 0.2) {
-      intensity = 0;
-    }
-
-    if (xAxisKey.matches(event.key)) {
+    if (xAxisKey.matches(event)) {
       state.x = intensity;
-    } else if (yAxisKey.matches(event.key)) {
+    } else if (yAxisKey.matches(event)) {
       state.y = intensity;
     }
   }

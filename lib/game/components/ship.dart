@@ -86,11 +86,7 @@ class Ship extends SpriteComponent
   static final _random = Random();
 
   Ship(this.playerNumber, this.gamepadId)
-      : moveJoystick = _makeJoystick(
-          gamepadId,
-          const GamepadLeftXAxis(),
-          const GamepadLeftYAxis(),
-        ),
+      : moveJoystick = _makeJoystick(gamepadId, leftXAxis, leftYAxis),
         super(size: Vector2(40, 80), anchor: Anchor.center) {
     paint = _shipColors[playerNumber];
     spritePath = shipSprites[playerNumber];
@@ -166,12 +162,7 @@ class Ship extends SpriteComponent
   }
 
   void _handleGamedpadShootEvent(GamepadEvent event) {
-    final isAButton =
-        event.key == '0' && event.value == 1.0 && event.type == KeyType.button;
-    final isR1Button =
-        event.key == '5' && event.value > 10000 && event.type == KeyType.analog;
-
-    if (isAButton || isR1Button) {
+    if (aButton.matches(event) || r1Bumper.matches(event)) {
       fire();
     }
   }
@@ -195,8 +186,6 @@ class Ship extends SpriteComponent
 
   @override
   void update(double dt) {
-    // TODO(any): Restrict movement to only allow ship to be within screen.
-
     final dt2 = dt * dt;
 
     engine
