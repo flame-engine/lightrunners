@@ -99,12 +99,15 @@ class EndGamePage extends StatelessWidget {
             ],
           ),
           OpacityBlinker(
-            child: Text(
-              'Press any button to continue',
-              style: TextStyle(
-                fontFamily: fontFamily,
-                fontSize: 32,
-                color: GamePalette.silver,
+            child: TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(
+                'Press any button to continue',
+                style: TextStyle(
+                  fontFamily: fontFamily,
+                  fontSize: 32,
+                  color: GamePalette.silver,
+                ),
               ),
             ),
           ),

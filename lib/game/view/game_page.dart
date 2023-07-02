@@ -27,7 +27,7 @@ class _GamePageState extends State<GamePage> {
     _game = LightRunnersGame(
       players: widget.players,
       onEndGame: (scores) {
-        Navigator.of(context).push(
+        Navigator.of(context).pushReplacement(
           EndGamePage.route(scores),
         );
       },

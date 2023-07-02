@@ -120,7 +120,6 @@ class Ship extends SpriteComponent
         Vector2(_random.nextBool() ? 1 : -1, _random.nextBool() ? 1 : -1),
       );
     angle = _random.nextDouble() * tau;
-    debugMode = true;
     add(RectangleHitbox());
   }
 

@@ -1,16 +1,7 @@
-# lightrunners
+# Lightrunners
 
-A new Flutter project.
+Lightrunners is a local multiplayer game built for FlutterCon 2023.
+It is a king of the hill type of game where you are supposed to stay within the spotlight for as
+long as possible, and keep other ships out of the spotlight by shooting or bumping into them.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Enjoy!
