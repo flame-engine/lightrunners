@@ -37,7 +37,7 @@ class CRTShader extends StatelessWidget {
                       value
                         ..setSize(size)
                         ..setFloat(1)
-                        ..setVector(Vector2(2, 5));
+                        ..setVector(Vector2(2, 3));
                     })
                     ..setImageSampler(0, pixelTexture)
                     ..setImageSampler(1, image);

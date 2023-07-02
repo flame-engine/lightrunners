@@ -9,9 +9,9 @@ import 'package:lightrunners/utils/gamepad_navigator.dart';
 import 'package:lightrunners/widgets/widgets.dart';
 
 const _maxScoreDigits = 3;
-const _maxCharactersScoreBoard = 32;
-const _lightrunnersInfoBlob = '''
-  Light Runners was made with 💙 by Blue Fire and Invertase for Fluttercon 2023
+const _maxCharactersScoreBoard = 26;
+const _lightrunnersInfoBlob =
+    '''Light Runners was made with 💙 by Blue Fire and Invertase for Fluttercon 2023
 ''';
 final _leaderboard = [
   (name: 'Erick', score: 100),
@@ -97,7 +97,8 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                       _toScoreboardLine(entry),
                       style: TextStyle(
                         fontFamily: major,
-                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 38,
                         color: Colors.white,
                       ),
                     )

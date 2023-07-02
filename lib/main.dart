@@ -8,21 +8,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.device.fullScreen();
   runApp(
-    BloomShader(
+    CRTShader(
       enabled: true,
-      child: CRTShader(
-        enabled: true,
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home: const TitlePage(),
-          themeMode: ThemeMode.dark,
-          theme: ThemeData(
-            colorScheme: const ColorScheme.dark(
-              primary: Color(0xFFE0D932),
-              secondary: Color(0xFFE032CF),
-            ),
-            textTheme: GoogleFonts.bungeeShadeTextTheme(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const TitlePage(),
+        themeMode: ThemeMode.dark,
+        theme: ThemeData(
+          colorScheme: const ColorScheme.dark(
+            primary: Color(0xFFE0D932),
+            secondary: Color(0xFFE032CF),
           ),
+          textTheme: GoogleFonts.bungeeShadeTextTheme(),
         ),
       ),
     ),

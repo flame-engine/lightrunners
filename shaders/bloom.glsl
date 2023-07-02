@@ -15,8 +15,8 @@ uniform sampler2D tTexture;
 
 out vec4 fragColor;
 
-const float blurSize = 1.0/3500.0;
-const float intensity = 0.35;
+const float blurSize = 1.0/8000;
+
 
 
 vec4 fragment(vec2 uv, vec2 pos, inout vec4 color) {
@@ -27,9 +27,11 @@ vec4 fragment(vec2 uv, vec2 pos, inout vec4 color) {
     int i;
 
     for (i = -18; i < 18; i++){
-        float factor = (mod(i, 18) / 10.0 ) * 0.008;
-        sum += texture(tTexture, vec2(texcoord.x + i * blurSize, texcoord.y * 40)) * factor ;
-        sum += texture(tTexture, vec2(texcoord.x, texcoord.y + i * blurSize * 40)) * factor ;
+        float factor = (mod(i, 18) / 18.0 ) * 0.08 ;
+        sum += texture(tTexture, vec2(texcoord.x + i * blurSize , texcoord.y)) * 0.5 * factor ;
+        sum += texture(tTexture, vec2(texcoord.x, texcoord.y + i * blurSize * 2)) * 0.5 * factor ;
+        sum.a = i / 18.0;
+        sum.a = smoothstep(0.0, 1.0, sum.a);
     }
 
     color = sum+ texture(tTexture, texcoord);
@@ -51,11 +53,20 @@ void main() {
 
 //    fragColor = texture(tTexture, uv);
 //    return;
-//
+
 
 
     fragment(uv, pos, color);
 
+    vec4 tColor = texture(tTexture, uv);
+    float luma = getLuma(tColor.rgb);
 
-    fragColor = color;
+    if(luma > 0.1) {
+        fragColor = tColor;
+    } else {
+        fragColor = color;
+    }
+
+
+
 }

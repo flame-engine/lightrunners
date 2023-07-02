@@ -22,13 +22,13 @@ out vec4 fragColor;
 
 
 vec2 brickTile(vec2 st, float _zoom){
-    st.y += step(1., mod(st.x, 2.0)) * 0.5;
+    st.y += step(1., mod(st.x, 2.0)) * 0.1;
     return fract(st);
 }
 
 
 // the shader core, implement effects here
-void fragment( vec2 pos, inout vec4 color, float displacement) {
+void fragment(vec2 pos, inout vec4 color, float displacement) {
     pos.y += displacement;
 
     vec2 st = pos.xy;
@@ -77,16 +77,9 @@ void fragment( vec2 pos, inout vec4 color, float displacement) {
 
 
     // this is color of the tile
-    vec4 tileColor = texture(tTexture, vec2(puvx, puvy ));
+    vec4 tileColor = texture(tTexture, vec2(puvx, puvy));
 
-//    tileColor.rgb = vec3(1.0);
-
-
-
-//    float brightness = 1.0;
     tileColor.rgb /= vec3(0.9);
-
-
 
     vec2 ssize = vec2(1.0, 1.0);
     vec2 bst = st / ssize;
@@ -95,29 +88,27 @@ void fragment( vec2 pos, inout vec4 color, float displacement) {
 
     color = vec4(0.0, 0.0, 0.0, 1.0);
 
-    vec3 sizer = tileColor.rgb * 1.0 ;
+    vec3 sizer = tileColor.rgb * 4.0;
 
-//    sizer = vec3(2.0) * sizer;
-//    sizer= clamp(sizer, vec3(0.0), vec3(1.0));
-
-
-    float noise = (fract(sin(dot(st, vec2(12.9898, 78.233)*2.0)) * 43758.5453));
+    //    sizer = vec3(2.0) * sizer;
+    sizer= smoothstep(0.0, 1.0, sizer);
+    //        sizer = vec3(1.0) ;
 
 
-    rst.y = (rst.y / sizer.r);
-    rst.y -= 1.0 - sizer.r;
-    rst.x += noise * 0.07;
-    color.r = texture(tPixelTexture, rst).r * tileColor.r ;
+    rst = (rst / sizer.r);
+    rst -= 1.0 - sizer.r;
 
-    gst.y = (gst.y / sizer.g);
-    gst.y -= 1.0 - sizer.g;
-    gst.x += noise * 0.07;
-    color.g = texture(tPixelTexture, gst).g * tileColor.g ;
+    color.r = texture(tPixelTexture, rst).r * tileColor.r;
+
+    gst = (gst / sizer.g);
+    gst -= 1.0 - sizer.g;
+
+    color.g = texture(tPixelTexture, gst).g * tileColor.g;
 
 
-    bst.y =  (bst.y / sizer.b) ;
+    bst.y =  (bst.y / sizer.b);
     bst.y -= 1.0 - sizer.b;
-    bst.x += noise * 0.07;
+
     color.b = texture(tPixelTexture, bst).b * tileColor.b;
 
 
@@ -138,25 +129,20 @@ void main() {
 
     vec2 uv = pos / uSize;
 
+
     vec4 color;
-    fragment( pos, color, 0.0);
+    fragment(pos, color, 0.0);
 
     vec4 color2;
-    fragment( pos + vec2(brickSize.x/2, 0), color2, 0.5);
+    fragment(pos + vec2(brickSize) / 2, color2, 0);
 
-    color.rgb = mix(color.rgb, color2.rgb, 0.5);
-    color.rgb *= 1.2 ;
-
-
-    float mdf = 0.07;
-    float noise = (fract(sin(dot(uv, vec2(12.9898, 78.233)*2.0)) * 43758.5453));
-    float luma = getLuma(color.rgb);
-    if(luma > 0.5) {
-        mdf *= (luma + 0.33) *3;
-        color += noise * mdf;
+    float lumacolor2 = getLuma(color2.rgb);
+    if(lumacolor2 > 0.4) {
+        color.rgb = mix(color.rgb, color2.rgb, 0.5);
     }
 
 
+    color.rgb *= 1.2;
 
     fragColor = color;
 }
