@@ -30,7 +30,6 @@ flutter:
   uses-material-design: false
   shaders:
     - shaders/super_crt.glsl
-    - shaders/bloom.glsl
   assets:
     - google_fonts/
     - assets/images/

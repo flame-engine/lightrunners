@@ -30,14 +30,12 @@ class _LobbyPageState extends State<LobbyPage> {
   late StreamSubscription<GamepadEvent> _gamepadSubscription;
   late final FocusNode _focusNode;
 
-
   @override
   void initState() {
     super.initState();
     _focusNode = FocusNode()..requestFocus();
 
     _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
-
       setState(() {
         if (startButton.matches(event)) {
           Navigator.of(context)
@@ -62,10 +60,9 @@ class _LobbyPageState extends State<LobbyPage> {
   @override
   Widget build(BuildContext context) {
     const centerTextStyle = TextStyle(
-      color: GamePalette.lightBlue,
-      fontSize: 48.0,
-      fontWeight: FontWeight.bold
-    );
+        color: GamePalette.lightBlue,
+        fontSize: 48.0,
+        fontWeight: FontWeight.bold);
 
     return RawKeyboardListener(
       focusNode: _focusNode,

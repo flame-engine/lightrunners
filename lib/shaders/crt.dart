@@ -17,9 +17,7 @@ class CRTShader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
-    if(!enabled) return child;
+    if (!enabled) return child;
 
     return ColoredBox(
       color: Colors.black,

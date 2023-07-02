@@ -67,16 +67,11 @@ void fragment(vec2 pos, inout vec4 color, float displacement) {
     }
 
     st.y += tiling;
-
-    // this is st within the tile
     st =  fract(st);
-
 
     float puvy = (brickY / bricksYAmount);
     float puvx = (brickX / bricksXAmount);
 
-
-    // this is color of the tile
     vec4 tileColor = texture(tTexture, vec2(puvx, puvy));
 
     tileColor.rgb /= vec3(0.9);
@@ -90,11 +85,7 @@ void fragment(vec2 pos, inout vec4 color, float displacement) {
 
     vec3 sizer = tileColor.rgb * 4.0;
 
-    //    sizer = vec3(2.0) * sizer;
     sizer= smoothstep(0.0, 1.0, sizer);
-    //        sizer = vec3(1.0) ;
-
-
     rst = (rst / sizer.r);
     rst -= 1.0 - sizer.r;
 
@@ -111,8 +102,6 @@ void fragment(vec2 pos, inout vec4 color, float displacement) {
 
     color.b = texture(tPixelTexture, bst).b * tileColor.b;
 
-
-
     color.a = color.b + color.g + color.r;
 
 }
@@ -123,12 +112,11 @@ float getLuma(vec3 color) {
     return dot(color, weights);
 }
 
-// the main function
+
 void main() {
     vec2 pos = FlutterFragCoord().xy;
 
     vec2 uv = pos / uSize;
-
 
     vec4 color;
     fragment(pos, color, 0.0);
@@ -140,7 +128,6 @@ void main() {
     if(lumacolor2 > 0.4) {
         color.rgb = mix(color.rgb, color2.rgb, 0.5);
     }
-
 
     color.rgb *= 1.2;
 
