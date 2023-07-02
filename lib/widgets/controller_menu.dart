@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:gamepads/gamepads.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lightrunners/ui/palette.dart';
+import 'package:lightrunners/utils/gamepad_navigator.dart';
 
 typedef ControllerMenuOprion = ({String name, VoidCallback onPressed});
 
@@ -22,7 +26,31 @@ class ControllerMenu extends StatefulWidget {
 }
 
 class _ControllerMenuState extends State<ControllerMenu> {
+  late StreamSubscription<GamepadEvent> _gamepadSubscription;
+  late GamepadNavigator _gamepadNavigator;
   int focusedOption = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _gamepadNavigator = GamepadNavigator(
+      yAxisHandler: (int ds) => setState(() {
+        focusedOption =
+            (focusedOption + ds).clamp(0, widget.options.length - 1);
+      }),
+      onAction: () {
+        widget.options[focusedOption].onPressed();
+      },
+    );
+    _gamepadSubscription = Gamepads.events.listen(_gamepadNavigator.handle);
+  }
+
+  @override
+  void dispose() {
+    _gamepadSubscription.cancel();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
