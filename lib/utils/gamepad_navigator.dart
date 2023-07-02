@@ -5,11 +5,13 @@ class GamepadNavigator {
   final Function(int)? xAxisHandler;
   final Function(int)? yAxisHandler;
   final Function()? onAction;
+  final Function()? onAny;
 
   GamepadNavigator({
     this.xAxisHandler,
     this.yAxisHandler,
     this.onAction,
+    this.onAny,
   });
 
   int _getValue(GamepadEvent event) {
@@ -17,6 +19,10 @@ class GamepadNavigator {
   }
 
   void handle(GamepadEvent event) {
+    if (event.value == 1.0) {
+      onAny?.call();
+    }
+
     if (leftXAxis.matches(event)) {
       final value = _getValue(event);
       if (value != 0) {

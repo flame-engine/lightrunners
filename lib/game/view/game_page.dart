@@ -10,6 +10,7 @@ class GamePage extends StatefulWidget {
 
   static Route<void> route({required List<String?> players}) {
     return MaterialPageRoute<void>(
+      maintainState: false,
       builder: (_) => GamePage(players: players),
     );
   }
