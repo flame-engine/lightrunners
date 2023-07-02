@@ -39,15 +39,18 @@ class GamepadAnalogAxis implements GamepadKey {
 }
 
 class GamepadButtonKey extends GamepadKey {
-  final String key;
+  final String linuxKeyName;
+  final String macosKeyName;
 
-  const GamepadButtonKey({required this.key});
+  const GamepadButtonKey({
+    required this.linuxKeyName,
+    required this.macosKeyName,
+  });
 
   @override
   bool matches(GamepadEvent event) {
-    return event.key == key &&
-        event.value == 1.0 &&
-        event.type == KeyType.button;
+    final isKey = event.key == linuxKeyName || event.key == macosKeyName;
+    return isKey && event.value == 1.0 && event.type == KeyType.button;
   }
 }
 
@@ -81,5 +84,17 @@ const rightYAxis = GamepadAnalogAxis(
   macosKeyName: 'r.joystick - yAxis',
 );
 
-const GamepadKey aButton = GamepadButtonKey(key: '0');
+const GamepadKey aButton = GamepadButtonKey(
+  linuxKeyName: '0',
+  macosKeyName: '???',
+);
+const GamepadKey startButton = GamepadButtonKey(
+  linuxKeyName: '7',
+  macosKeyName: 'line.horizontal.3.circle',
+);
+const GamepadKey selectButton = GamepadButtonKey(
+  linuxKeyName: '6',
+  macosKeyName: '???',
+);
+
 const GamepadKey r1Bumper = GamepadBumperKey(key: '5');

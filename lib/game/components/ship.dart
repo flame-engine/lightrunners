@@ -116,7 +116,17 @@ class Ship extends SpriteComponent
         Vector2(_random.nextBool() ? 1 : -1, _random.nextBool() ? 1 : -1),
       );
     angle = _random.nextDouble() * tau;
-    add(RectangleHitbox());
+    add(
+      PolygonHitbox.relative(
+        [
+          Vector2(-1, 1),
+          Vector2(1, 1),
+          Vector2(0, -1),
+        ],
+        parentSize: size,
+      ),
+    );
+    debugMode = true;
   }
 
   void fire() {
@@ -234,6 +244,8 @@ class Ship extends SpriteComponent
     }
   }
 
+  final _nextVelocity = Vector2.zero();
+
   @override
   void onCollisionStart(
     Set<Vector2> intersectionPoints,
@@ -246,8 +258,10 @@ class Ship extends SpriteComponent
       }
       velocity.add(other.velocity..scale(0.1));
       other.removeFromParent();
-    } else if (other is Ship) {
-      // TODO(any): Don't let ships overlap
+    } else if (other is Ship && playerNumber < other.playerNumber) {
+      _nextVelocity.setFrom(other.velocity);
+      other.velocity.setFrom(velocity);
+      velocity.setFrom(_nextVelocity);
     }
   }
 }
