@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:gamepads/gamepads.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lightrunners/game/game.dart';
+import 'package:lightrunners/title/view/title_page.dart';
 import 'package:lightrunners/ui/ui.dart';
+import 'package:lightrunners/utils/gamepad_navigator.dart';
 import 'package:lightrunners/widgets/widgets.dart';
 
-class EndGamePage extends StatelessWidget {
+class EndGamePage extends StatefulWidget {
   const EndGamePage({
     required this.scores,
     super.key,
@@ -14,15 +19,40 @@ class EndGamePage extends StatelessWidget {
 
   static Route<void> route(Map<Color, int> scores) {
     return MaterialPageRoute<void>(
+      maintainState: false,
       builder: (_) => EndGamePage(scores: scores),
     );
+  }
+
+  @override
+  State<EndGamePage> createState() => _EndGamePageState();
+}
+
+class _EndGamePageState extends State<EndGamePage> {
+  late StreamSubscription<GamepadEvent> _gamepadSubscription;
+  late GamepadNavigator _gamepadNavigator;
+
+  @override
+  void initState() {
+    super.initState();
+    _gamepadNavigator = GamepadNavigator(
+      onAny: () => Navigator.of(context).pushReplacement(TitlePage.route()),
+    );
+    _gamepadSubscription = Gamepads.events.listen(_gamepadNavigator.handle);
+  }
+
+  @override
+  void dispose() {
+    _gamepadSubscription.cancel();
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final fontFamily = GoogleFonts.bungee().fontFamily;
 
-    final scores = this.scores.entries.toList()
+    final scores = widget.scores.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
     const baseSize = 64;
@@ -100,7 +130,8 @@ class EndGamePage extends StatelessWidget {
           ),
           OpacityBlinker(
             child: TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () =>
+                  Navigator.of(context).pushReplacement(TitlePage.route()),
               child: Text(
                 'Press any button to continue',
                 style: TextStyle(

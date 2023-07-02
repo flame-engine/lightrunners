@@ -5,7 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lightrunners/game/view/game_page.dart';
+import 'package:lightrunners/title/view/title_page.dart';
 import 'package:lightrunners/ui/palette.dart';
+import 'package:lightrunners/utils/gamepad_map.dart';
 import 'package:lightrunners/widgets/screen_scaffold.dart';
 
 class LobbyPage extends StatefulWidget {
@@ -13,6 +15,7 @@ class LobbyPage extends StatefulWidget {
 
   static Route<void> route() {
     return MaterialPageRoute<void>(
+      maintainState: false,
       builder: (_) => const LobbyPage(),
     );
   }
@@ -34,10 +37,11 @@ class _LobbyPageState extends State<LobbyPage> {
 
     _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
       setState(() {
-        if ((event.key == '7' || event.key == 'line.horizontal.3.circle') &&
-            event.value == 1.0) {
-          // The start key was pressed
-          Navigator.of(context).push(GamePage.route(players: _players));
+        if (startButton.matches(event)) {
+          Navigator.of(context)
+              .pushReplacement(GamePage.route(players: _players));
+        } else if (selectButton.matches(event)) {
+          Navigator.of(context).pushReplacement(TitlePage.route());
         } else if (!_players.contains(event.gamepadId) && event.key == '0') {
           _players.add(event.gamepadId);
         }
@@ -70,7 +74,8 @@ class _LobbyPageState extends State<LobbyPage> {
           });
         } else if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
           // The start key was pressed
-          Navigator.of(context).push(GamePage.route(players: _players));
+          Navigator.of(context)
+              .pushReplacement(GamePage.route(players: _players));
         }
       },
       child: ScreenScaffold(
