@@ -1,15 +1,14 @@
 import 'dart:ui' as ui;
 
-import 'package:vector_math/vector_math.dart' hide Colors;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
+import 'package:vector_math/vector_math.dart' hide Colors;
 
 class CRTShader extends StatelessWidget {
   const CRTShader({
-    super.key,
     required this.enabled,
     required this.child,
+    super.key,
   });
 
   final bool enabled;
@@ -17,7 +16,9 @@ class CRTShader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!enabled) return child;
+    if (!enabled) {
+      return child;
+    }
 
     return ColoredBox(
       color: Colors.black,
@@ -58,8 +59,8 @@ class CRTShader extends StatelessWidget {
 class ImageBuilder extends StatefulWidget {
   const ImageBuilder(
     this.builder, {
-    super.key,
     required this.assetImageProvider,
+    super.key,
   });
 
   final Widget Function(BuildContext context, ui.Image image) builder;

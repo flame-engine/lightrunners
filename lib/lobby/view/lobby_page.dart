@@ -60,9 +60,10 @@ class _LobbyPageState extends State<LobbyPage> {
   @override
   Widget build(BuildContext context) {
     const centerTextStyle = TextStyle(
-        color: GamePalette.lightBlue,
-        fontSize: 48.0,
-        fontWeight: FontWeight.bold);
+      color: GamePalette.lightBlue,
+      fontSize: 48.0,
+      fontWeight: FontWeight.bold,
+    );
 
     return RawKeyboardListener(
       focusNode: _focusNode,
