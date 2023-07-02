@@ -7,6 +7,13 @@ import 'package:lightrunners/widgets/controller_menu.dart';
 import 'package:lightrunners/widgets/screen_scaffold.dart';
 
 class TitlePage extends StatelessWidget {
+  static Route<void> route() {
+    return MaterialPageRoute<void>(
+      maintainState: false,
+      builder: (_) => const TitlePage(),
+    );
+  }
+
   const TitlePage({super.key});
 
   @override
@@ -26,13 +33,13 @@ class TitlePage extends StatelessWidget {
                   (
                     name: 'Start',
                     onPressed: () {
-                      Navigator.of(context).push(LobbyPage.route());
+                      Navigator.of(context).pushReplacement(LobbyPage.route());
                     },
                   ),
                   (
                     name: 'LeaderBoard',
                     onPressed: () {
-                      Navigator.of(context).push(
+                      Navigator.of(context).pushReplacement(
                         EndGamePage.route(
                           {
                             GamePalette.blue: 100,
