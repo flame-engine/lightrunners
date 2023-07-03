@@ -18,7 +18,7 @@ class ScorePanel extends RectangleComponent
       game.ships.values.map(
         (ship) => ScoreBox(
           shipRef: ship,
-          position: _computeTarget(ship.playerNumber),
+          position: _computeTarget(ship.player.slotNumber),
         ),
       ),
     );
