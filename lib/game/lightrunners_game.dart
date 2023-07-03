@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:flame/camera.dart';
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:lightrunners/game/components/background.dart';
 import 'package:lightrunners/game/components/game_border.dart';
+import 'package:lightrunners/game/components/powerup.dart';
 import 'package:lightrunners/game/components/score_panel.dart';
 import 'package:lightrunners/game/components/spotlight.dart';
 import 'package:lightrunners/game/game.dart';
@@ -49,14 +50,24 @@ class LightRunnersGame extends FlameGame
     world.addAll([Spotlight(), ...ships.values]);
     add(world);
 
-    late CountDown countDown;
-    await add(
+    late final CountDown countDown;
+    add(
       countDown = CountDown(
         onTimeUp: () {
           countDown.removeFromParent();
           onEndGame({
             for (final ship in ships.values) ship.paint.color: ship.score,
           });
+        },
+      ),
+    );
+
+    add(
+      TimerComponent(
+        period: 10,
+        repeat: true,
+        onTick: () {
+          world.add(PowerUp());
         },
       ),
     );

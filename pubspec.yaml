@@ -33,6 +33,7 @@ flutter:
     - shaders/super_crt.glsl
   assets:
     - google_fonts/
+    - assets/audio/
     - assets/images/
     - assets/images/ships/
-    - assets/audio/
+    - assets/images/powerups/
