@@ -56,14 +56,6 @@ class _LobbyPageState extends State<LobbyPage> {
     });
   }
 
-  @override
-  void dispose() {
-    _gamepadSubscription.cancel();
-    _focusNode.dispose();
-
-    super.dispose();
-  }
-
   void onPlayerIdentified(int id, String username) {
     setState(() {
       _players[id] = _players[id].copyWith(playerId: id, username: username);
@@ -164,6 +156,14 @@ class _LobbyPageState extends State<LobbyPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _gamepadSubscription.cancel();
+    _focusNode.dispose();
+
+    super.dispose();
   }
 }
 
