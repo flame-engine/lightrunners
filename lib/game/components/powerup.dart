@@ -4,6 +4,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/experimental.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/geometry.dart';
 import 'package:flutter/animation.dart';
 import 'package:lightrunners/game/game.dart';
@@ -11,7 +12,7 @@ import 'package:lightrunners/game/game.dart';
 enum PowerUpType {
   speed('invertase.png'),
   shots('flame.png'),
-  weight('globe.png');
+  weight('melos.png');
 
   const PowerUpType(this.asset);
 
@@ -20,7 +21,9 @@ enum PowerUpType {
 
 class PowerUp extends SpriteComponent
     with HasGameReference<LightRunnersGame>, CollisionCallbacks {
-  PowerUp(this.type) : super(anchor: Anchor.center);
+  PowerUp()
+      : type = (PowerUpType.values.toList()..shuffle(_random)).first,
+        super(anchor: Anchor.center);
 
   static final Random _random = Random();
   final PowerUpType type;
@@ -28,10 +31,15 @@ class PowerUp extends SpriteComponent
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    sprite = await game.loadSprite(type.asset);
-    final sizeRelation = sprite!.image.width / sprite!.image.height;
+    sprite = await game.loadSprite('powerups/${type.asset}');
+    final sizeRelation = sprite!.image.height / sprite!.image.width;
     final width = 100 + 100 * _random.nextDouble();
     size = Vector2(width, sizeRelation * width);
+    position = Vector2.random(_random)
+      ..multiply(game.playArea.toVector2() / 2)
+      ..multiply(
+        Vector2(_random.nextBool() ? 1 : -1, _random.nextBool() ? 1 : -1),
+      );
 
     add(CircleHitbox()..collisionType = CollisionType.passive);
     add(
@@ -65,7 +73,7 @@ class PowerUp extends SpriteComponent
   }
 
   void affectShip(Ship ship) {
-    switch(type) {
+    switch (type) {
       case PowerUpType.shots:
         ship.bulletSpeed *= 2;
       case PowerUpType.speed:

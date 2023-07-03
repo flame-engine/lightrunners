@@ -93,7 +93,7 @@ class Ship extends SpriteComponent
   final String? gamepadId; // null means keyboard
   int score = 0;
   late final String spritePath;
-  
+
   double engineStrength = 125.0;
   double bulletSpeed = 300.0;
   double weightFactor = 1.0;
