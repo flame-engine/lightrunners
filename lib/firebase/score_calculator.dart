@@ -6,6 +6,9 @@ class _PlayerScore {
   int score = 0;
 
   _PlayerScore(this.player);
+
+  @override
+  String toString() => '$player: $score';
 }
 
 class ScoreCalculator {
@@ -15,13 +18,14 @@ class ScoreCalculator {
     final scores = points.entries
         .toList()
         .sortedBy<num>((entry) => entry.value)
-        .map((entry) => _PlayerScore(entry.key));
+        .map((entry) => _PlayerScore(entry.key))
+        .toList();
 
     final numPlayers = points.length;
     final totalScore = points.values.reduce((a, b) => a + b);
 
     var jackpot = numPlayers;
-    if (jackpot == 0) {
+    if (jackpot == 0 || totalScore == 0) {
       return {};
     }
 
@@ -39,9 +43,7 @@ class ScoreCalculator {
     }
 
     return Map.fromEntries(
-      scores
-          .map((score) => MapEntry(score.player, score.score))
-          .where((element) => element.value > 0),
+      scores.where((e) => e.score > 0).map((e) => MapEntry(e.player, e.score)),
     );
   }
 }

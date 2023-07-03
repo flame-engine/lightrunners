@@ -122,9 +122,12 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   }
 
   String _toScoreboardLine(Score record) {
-    final name = record.email.substring(
+    final name = record.username.substring(
       0,
-      min(record.email.length, _maxCharactersScoreBoard - _maxScoreDigits - 1),
+      min(
+        record.username.length,
+        _maxCharactersScoreBoard - _maxScoreDigits - 1,
+      ),
     );
     final maxScore = pow(10, _maxScoreDigits) - 1;
     final score = record.score
