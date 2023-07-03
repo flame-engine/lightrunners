@@ -56,9 +56,11 @@ class _LobbyPageState extends State<LobbyPage> {
     });
   }
 
-  void onPlayerIdentified(int id, String username) {
+  void onPlayerIdentified(int slotNumber, int? playerId) {
     setState(() {
-      _players[id] = _players[id].copyWith(playerId: id, username: username);
+      _players[slotNumber] = _players[slotNumber].copyWith(
+        playerId: playerId,
+      );
     });
   }
 
@@ -170,7 +172,7 @@ class _LobbyPageState extends State<LobbyPage> {
 class PlayerRectangle extends StatelessWidget {
   final int id;
   final List<Player> players;
-  final void Function(int, String) onPlayerIdentified;
+  final void Function(int, int?) onPlayerIdentified;
 
   const PlayerRectangle({
     required this.id,
@@ -187,10 +189,9 @@ class PlayerRectangle extends StatelessWidget {
 
     final child = hasJoined && !hasIdentified
         ? PlayerIdentification(
-            gamePadId: players[id].gamepadId!,
-            onPlayerIdentified: (String playerId) {
-              onPlayerIdentified(id, playerId);
-            },
+            slotNumber: id,
+            gamepadId: players[id].gamepadId,
+            onPlayerIdentified: onPlayerIdentified,
           )
         : Text(
             hasJoined ? 'Ready' : 'Waiting...',
@@ -225,15 +226,17 @@ class PlayerRectangle extends StatelessWidget {
 }
 
 class PlayerIdentification extends StatefulWidget {
-  final String gamePadId;
+  final int slotNumber;
+  final String? gamepadId;
 
   const PlayerIdentification({
-    required this.gamePadId,
+    required this.slotNumber,
+    required this.gamepadId,
     required this.onPlayerIdentified,
     super.key,
   });
 
-  final void Function(String) onPlayerIdentified;
+  final void Function(int, int?) onPlayerIdentified;
 
   @override
   State<PlayerIdentification> createState() => _PlayerIdentificationState();
@@ -252,14 +255,14 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
 
     _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
       setState(() {
-        if (event.gamepadId == widget.gamePadId) {
+        if (event.gamepadId == widget.gamepadId) {
           if (_selectedPlayerMode == false) {
             if (aButton.matches(event)) {
               setState(() {
                 _selectedPlayerMode = true;
               });
             } else if (bButton.matches(event)) {
-              widget.onPlayerIdentified('guest');
+              widget.onPlayerIdentified(widget.slotNumber, null);
             }
           } else {
             if (aButton.matches(event)) {
@@ -281,7 +284,10 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
               });
             } else if (startButton.matches(event)) {
               // Identify player
-              widget.onPlayerIdentified(_playerId);
+              widget.onPlayerIdentified(
+                widget.slotNumber,
+                int.parse(_playerId),
+              );
             }
           }
         }
