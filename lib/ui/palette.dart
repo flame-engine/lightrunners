@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-import 'package:lightrunners/game/components/bullet.dart';
-
 class GamePalette {
   static const red = Color(0xFFE03232);
   static const orange = Color(0xFFE07B32);
@@ -28,9 +26,6 @@ class GamePalette {
   static final bulletPaints = shipValues.map((color) {
     return Paint()
       ..color = color
-      ..maskFilter = const MaskFilter.blur(
-        BlurStyle.normal,
-        bulletRadius / 2,
-      );
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
   }).toList(growable: false);
 }

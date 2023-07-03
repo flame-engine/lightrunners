@@ -12,7 +12,7 @@ import 'package:lightrunners/game/game.dart';
 enum PowerUpType {
   speed('invertase.png'),
   shots('flame.png'),
-  secret('melos.png'),
+  drag('melos.png'),
   weight('widgetbook.png');
 
   const PowerUpType(this.asset);
@@ -80,9 +80,10 @@ class PowerUp extends SpriteComponent
       case PowerUpType.speed:
         ship.engineStrength *= 2;
       case PowerUpType.weight:
-        ship.weightFactor *= 2;
-      case PowerUpType.secret:
-      // Does absolutely nothing, very mysterious!
+        ship.weightFactor *= 1.5;
+        ship.size.scale(1.5);
+      case PowerUpType.drag:
+        ship.dragFactor *= 0.7;
     }
   }
 }
