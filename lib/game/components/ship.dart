@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:lightrunners/game/game.dart';
 import 'package:lightrunners/game/player.dart';
-import 'package:lightrunners/ui/ui.dart';
 import 'package:lightrunners/utils/gamepad_map.dart';
 import 'package:lightrunners/utils/input_handler_utils.dart';
 
@@ -47,9 +46,6 @@ const playerKeyboardControlsMapping = [
   ),
 ];
 
-final _shipColors =
-    GamePalette.shipValues.map((color) => Paint()..color = color).toList();
-
 final shipSprites = [
   'netunos_wrath.png',
   'purple_haze.png',
@@ -83,19 +79,14 @@ class Ship extends SpriteComponent
         CollisionCallbacks {
   static final _random = Random();
 
-  Ship(this.playerNumber, this.gamepadId)
-      : player = Player(
-          color: _shipColors[playerNumber].color,
-        ),
-        moveJoystick = _makeJoystick(gamepadId, leftXAxis, leftYAxis),
+  Ship(this.player) :
+        moveJoystick = _makeJoystick(player.gamepadId, leftXAxis, leftYAxis),
         super(size: Vector2(40, 80), anchor: Anchor.center) {
-    paint = _shipColors[playerNumber];
-    spritePath = shipSprites[playerNumber];
+    paint = Paint()..color = player.color;
+    spritePath = shipSprites[player.slotNumber];
   }
 
   final Player player;
-  final int playerNumber;
-  final String? gamepadId; // null means keyboard
   int score = 0;
   late final String spritePath;
 
@@ -140,7 +131,7 @@ class Ship extends SpriteComponent
 
     game.world.add(
       Bullet(
-        ownerPlayerNumber: playerNumber,
+        ownerPlayerNumber: player.slotNumber,
         position: positionOfAnchor(Anchor.topCenter),
         velocity: bulletVector * bulletSpeed,
         color: paint.color,
@@ -153,7 +144,7 @@ class Ship extends SpriteComponent
     RawKeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
-    final keyboardControl = playerKeyboardControlsMapping[playerNumber];
+    final keyboardControl = playerKeyboardControlsMapping[player.slotNumber];
 
     if (event.isKeyPressed(keyboardControl.shoot)) {
       fire();
@@ -259,12 +250,12 @@ class Ship extends SpriteComponent
   ) {
     super.onCollisionStart(intersectionPoints, other);
     if (other is Bullet) {
-      if (other.ownerPlayerNumber == playerNumber) {
+      if (other.ownerPlayerNumber == player.slotNumber) {
         return;
       }
       velocity.add(other.velocity..scale(0.2));
       other.removeFromParent();
-    } else if (other is Ship && playerNumber < other.playerNumber) {
+    } else if (other is Ship && player.slotNumber < other.player.slotNumber) {
       _nextVelocity.setFrom(other.velocity.scaled(other.weightFactor));
       other.velocity.setFrom(velocity.scaled(weightFactor));
       velocity.setFrom(_nextVelocity);

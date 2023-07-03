@@ -26,9 +26,7 @@ class _TitlePageState extends State<TitlePage> {
     super.initState();
 
     final audioManager = AudioManager();
-
     audioManager.stopBgm();
-
     audioManager.introSfx();
 
     Future.delayed(const Duration(milliseconds: 1500), audioManager.playTitle);

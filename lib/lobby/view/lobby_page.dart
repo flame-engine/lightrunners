@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lightrunners/game/player.dart';
 import 'package:lightrunners/game/view/game_page.dart';
 import 'package:lightrunners/title/view/title_page.dart';
 import 'package:lightrunners/ui/palette.dart';
@@ -25,7 +26,7 @@ class LobbyPage extends StatefulWidget {
 }
 
 class _LobbyPageState extends State<LobbyPage> {
-  final List<String?> _players = [];
+  final List<Player> _players = [];
 
   late StreamSubscription<GamepadEvent> _gamepadSubscription;
   late final FocusNode _focusNode;
@@ -37,24 +38,28 @@ class _LobbyPageState extends State<LobbyPage> {
 
     _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
       setState(() {
-        if (startButton.matches(event)) {
+        if (startButton.matches(event) &&
+            !_players.any((p) => p.username == null)) {
           Navigator.of(context)
               .pushReplacement(GamePage.route(players: _players));
         } else if (selectButton.matches(event)) {
           Navigator.of(context).pushReplacement(TitlePage.route());
-        } else if (!_players.contains(event.gamepadId) && event.key == '0') {
-          _players.add(event.gamepadId);
+        } else if (_players
+                .where((player) => player.gamepadId == event.gamepadId)
+                .isEmpty &&
+            aButton.matches(event)) {
+          _players.add(
+            Player(slotNumber: _players.length, gamepadId: event.gamepadId),
+          );
         }
       });
     });
   }
 
-  @override
-  void dispose() {
-    _gamepadSubscription.cancel();
-    _focusNode.dispose();
-
-    super.dispose();
+  void onPlayerIdentified(int id, String username) {
+    setState(() {
+      _players[id] = _players[id].copyWith(playerId: id, username: username);
+    });
   }
 
   @override
@@ -70,7 +75,7 @@ class _LobbyPageState extends State<LobbyPage> {
       onKey: (RawKeyEvent event) {
         if (event.isKeyPressed(LogicalKeyboardKey.space)) {
           setState(() {
-            _players.add(null);
+            _players.add(Player(slotNumber: _players.length));
           });
         } else if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
           // The start key was pressed
@@ -85,10 +90,26 @@ class _LobbyPageState extends State<LobbyPage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                PlayerRectangle(id: 0, players: _players),
-                PlayerRectangle(id: 1, players: _players),
-                PlayerRectangle(id: 2, players: _players),
-                PlayerRectangle(id: 3, players: _players),
+                PlayerRectangle(
+                  id: 0,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 1,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 2,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 3,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
               ],
             ),
             const Center(
@@ -109,10 +130,26 @@ class _LobbyPageState extends State<LobbyPage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                PlayerRectangle(id: 4, players: _players),
-                PlayerRectangle(id: 5, players: _players),
-                PlayerRectangle(id: 6, players: _players),
-                PlayerRectangle(id: 7, players: _players),
+                PlayerRectangle(
+                  id: 4,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 5,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 6,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 7,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
               ],
             ),
           ],
@@ -120,15 +157,25 @@ class _LobbyPageState extends State<LobbyPage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _gamepadSubscription.cancel();
+    _focusNode.dispose();
+
+    super.dispose();
+  }
 }
 
 class PlayerRectangle extends StatelessWidget {
   final int id;
-  final List<String?> players;
+  final List<Player> players;
+  final void Function(int, String) onPlayerIdentified;
 
   const PlayerRectangle({
     required this.id,
     required this.players,
+    required this.onPlayerIdentified,
     super.key,
   });
 
@@ -136,12 +183,29 @@ class PlayerRectangle extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = GamePalette.shipValues[id];
     final hasJoined = id < players.length;
+    final hasIdentified = hasJoined && players[id].username != null;
+
+    final child = hasJoined && !hasIdentified
+        ? PlayerIdentification(
+            gamePadId: players[id].gamepadId!,
+            onPlayerIdentified: (String playerId) {
+              onPlayerIdentified(id, playerId);
+            },
+          )
+        : Text(
+            hasJoined ? 'Ready' : 'Waiting...',
+            style: TextStyle(
+              fontFamily: GoogleFonts.bungee().fontFamily,
+              color: color,
+              fontSize: 28.0,
+            ),
+          );
 
     return Padding(
       padding: const EdgeInsets.all(20),
       child: Container(
-        height: 100,
-        width: 200,
+        height: 200,
+        width: 400,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           border: Border.all(
@@ -154,17 +218,137 @@ class PlayerRectangle extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
         ),
-        child: Center(
-          child: Text(
-            hasJoined ? 'Joined' : 'Waiting...',
-            style: TextStyle(
-              fontFamily: GoogleFonts.bungee().fontFamily,
-              color: color,
-              fontSize: 24.0,
-            ),
-          ),
-        ),
+        child: Center(child: child),
       ),
     );
+  }
+}
+
+class PlayerIdentification extends StatefulWidget {
+  final String gamePadId;
+
+  const PlayerIdentification({
+    required this.gamePadId,
+    required this.onPlayerIdentified,
+    super.key,
+  });
+
+  final void Function(String) onPlayerIdentified;
+
+  @override
+  State<PlayerIdentification> createState() => _PlayerIdentificationState();
+}
+
+class _PlayerIdentificationState extends State<PlayerIdentification> {
+  var _selectedPlayerMode = false;
+  var _playerId = '0000';
+  var _cursor = 0;
+
+  late StreamSubscription<GamepadEvent> _gamepadSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
+      setState(() {
+        if (event.gamepadId == widget.gamePadId) {
+          if (_selectedPlayerMode == false) {
+            if (aButton.matches(event)) {
+              setState(() {
+                _selectedPlayerMode = true;
+              });
+            } else if (bButton.matches(event)) {
+              widget.onPlayerIdentified('guest');
+            }
+          } else {
+            if (aButton.matches(event)) {
+              // Increment current digit
+              final digit =
+                  int.parse(_playerId.substring(_cursor, _cursor + 1));
+              final newDigit = (digit + 1) % 10;
+              setState(() {
+                _playerId = _playerId.replaceRange(
+                  _cursor,
+                  _cursor + 1,
+                  '$newDigit',
+                );
+              });
+            } else if (r1Bumper.matches(event) && event.value > 30000) {
+              // Move the cursor to the next digit if R1 is fully pressed
+              setState(() {
+                _cursor = (_cursor + 1) % _playerId.characters.length;
+              });
+            } else if (startButton.matches(event)) {
+              // Identify player
+              widget.onPlayerIdentified(_playerId);
+            }
+          }
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _gamepadSubscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = TextStyle(
+      fontFamily: GoogleFonts.bungee().fontFamily,
+      color: Colors.white,
+      fontSize: 28.0,
+    );
+
+    if (_selectedPlayerMode) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(height: 14),
+          Text(
+            'Enter player id',
+            style: textStyle,
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              for (var i = 0; i < _playerId.characters.length; i++)
+                Expanded(
+                  child: Text(
+                    _playerId.substring(i, i + 1),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: GoogleFonts.bungee().fontFamily,
+                      color: Colors.white,
+                      fontSize: 28.0,
+                      decoration: _cursor == i
+                          ? TextDecoration.underline
+                          : TextDecoration.none,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '(A) to identify Player',
+            style: textStyle,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            '(B) to play as guest',
+            style: textStyle,
+          ),
+        ],
+      );
+    }
   }
 }

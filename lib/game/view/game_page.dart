@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:lightrunners/audio/audio.dart';
 import 'package:lightrunners/end_game/end_game.dart';
 import 'package:lightrunners/game/game.dart';
+import 'package:lightrunners/game/player.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({required this.players, super.key});
 
-  final List<String?> players;
+  final List<Player> players;
 
-  static Route<void> route({required List<String?> players}) {
+  static Route<void> route({
+    required List<Player> players,
+  }) {
     return MaterialPageRoute<void>(
       maintainState: false,
       builder: (_) => GamePage(players: players),
