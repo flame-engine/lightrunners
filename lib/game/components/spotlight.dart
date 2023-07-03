@@ -9,7 +9,7 @@ import 'package:lightrunners/game/components/ship.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
 import 'package:lightrunners/utils/utils.dart';
 
-const _spotlightRadius = 35.0; //pixels
+const _spotlightRadius = 45.0; // pixels
 const _spotlightSpeed = 50.0; // pixels per second
 const _targetChangeProbability = 0.05; // per [_targetChangePeriod]
 const _targetChangePeriod = 0.5; // seconds

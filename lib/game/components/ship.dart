@@ -100,9 +100,9 @@ class Ship extends SpriteComponent
   late final String spritePath;
 
   double engineStrength = 125.0;
-  double bulletSpeed = 300.0;
+  double bulletSpeed = 400.0;
   double weightFactor = 1.0;
-  final double _drag = 5.0;
+  double dragFactor = 5.0;
 
   final Vector2 velocity = Vector2.zero();
   final Vector2 drag = Vector2.zero();
@@ -208,7 +208,7 @@ class Ship extends SpriteComponent
       ..scale(engineStrength);
     drag
       ..setFrom(velocity)
-      ..scaleTo(_drag)
+      ..scaleTo(dragFactor)
       ..scale(-1);
     acceleration
       ..setFrom(engine)
@@ -262,7 +262,7 @@ class Ship extends SpriteComponent
       if (other.ownerPlayerNumber == playerNumber) {
         return;
       }
-      velocity.add(other.velocity..scale(0.1));
+      velocity.add(other.velocity..scale(0.2));
       other.removeFromParent();
     } else if (other is Ship && playerNumber < other.playerNumber) {
       _nextVelocity.setFrom(other.velocity.scaled(other.weightFactor));

@@ -9,24 +9,23 @@ import 'package:lightrunners/game/lightrunners_game.dart';
 import 'package:lightrunners/ui/palette.dart';
 import 'package:lightrunners/utils/delaunay.dart';
 import 'package:lightrunners/utils/flame_utils.dart';
-import 'package:lightrunners/utils/triangle2.dart';
 
 const _margin = 200.0;
 
 const _numberShades = 5;
 const _shadeStep = 0.1;
 const _colorMoveSpeed = 30;
-final _emptyColor = GamePalette.black.brighten(_numberShades * _shadeStep);
+final _emptyColor = GamePalette.black.brighten(0.1);
 
-final _r = Random();
+final _random = Random();
 
 typedef ShadedTriangle = ({
-  Triangle2 triangle,
+  Path path,
   int shadeLevel,
 });
 
 class Background extends PositionComponent
-    with HasGameReference<LightRunnersGame> {
+    with HasGameReference<LightRunnersGame>, HasPaint {
   late Rect clipArea;
   late List<ShadedTriangle> mesh;
 
@@ -57,8 +56,8 @@ class Background extends PositionComponent
         .map((e) => e.translateBy(delta))
         .map(
           (triangle) => (
-            triangle: triangle,
-            shadeLevel: _r.nextInt(_numberShades),
+            path: triangle.toPath(),
+            shadeLevel: _random.nextInt(_numberShades),
           ),
         )
         .toList();
@@ -79,9 +78,8 @@ class Background extends PositionComponent
     canvas.clipRect(clipArea);
 
     for (final t in mesh) {
-      final shadedColor = currentColor.darken(t.shadeLevel * _shadeStep);
-      final path = t.triangle.toPath();
-      canvas.drawPath(path, Paint()..color = shadedColor);
+      final shadedColor = currentColor.brighten(t.shadeLevel * _shadeStep);
+      canvas.drawPath(t.path, paint..color = shadedColor);
     }
   }
 
@@ -91,10 +89,9 @@ class Background extends PositionComponent
     if (maxScore == 0) {
       return _fromColor(_emptyColor);
     }
-    const defaultBrightening = _numberShades / 2 * _shadeStep;
     final colors = sortedShips
         .takeWhile((ship) => ship.score == maxScore)
-        .map((ship) => ship.paint.color.brighten(defaultBrightening))
+        .map((ship) => ship.paint.color.darken(0.75))
         .toList();
     return colors.map(_fromColor).reduce((value, element) => value + element) /
         colors.length.toDouble();

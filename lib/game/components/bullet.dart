@@ -6,8 +6,6 @@ import 'package:flame/experimental.dart';
 import 'package:lightrunners/game/game.dart';
 import 'package:lightrunners/ui/ui.dart';
 
-const bulletRadius = 8.0;
-
 class Bullet extends CircleComponent with HasGameReference<LightRunnersGame> {
   final int ownerPlayerNumber;
   final Vector2 velocity;
@@ -19,7 +17,7 @@ class Bullet extends CircleComponent with HasGameReference<LightRunnersGame> {
     required this.velocity,
     required this.color,
   }) : super(
-          radius: velocity.length / 32,
+          radius: velocity.length / 50,
           anchor: Anchor.center,
           paint: GamePalette.bulletPaints[ownerPlayerNumber],
         );
