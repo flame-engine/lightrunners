@@ -12,7 +12,8 @@ import 'package:lightrunners/game/game.dart';
 enum PowerUpType {
   speed('invertase.png'),
   shots('flame.png'),
-  weight('melos.png');
+  secret('melos.png'),
+  weight('widgetbook.png');
 
   const PowerUpType(this.asset);
 
@@ -33,10 +34,10 @@ class PowerUp extends SpriteComponent
     super.onLoad();
     sprite = await game.loadSprite('powerups/${type.asset}');
     final sizeRelation = sprite!.image.height / sprite!.image.width;
-    final width = 100 + 100 * _random.nextDouble();
+    final width = 50 + 50 * _random.nextDouble();
     size = Vector2(width, sizeRelation * width);
     position = Vector2.random(_random)
-      ..multiply(game.playArea.toVector2() / 2)
+      ..multiply(game.playArea.deflate(width * 2).toVector2() / 2)
       ..multiply(
         Vector2(_random.nextBool() ? 1 : -1, _random.nextBool() ? 1 : -1),
       );
@@ -80,6 +81,8 @@ class PowerUp extends SpriteComponent
         ship.engineStrength *= 2;
       case PowerUpType.weight:
         ship.weightFactor *= 2;
+      case PowerUpType.secret:
+        // Does absolutely nothing, very mysterious!
     }
   }
 }
