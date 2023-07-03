@@ -55,7 +55,7 @@ class _ControllerMenuState extends State<ControllerMenu> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 250,
+      width: 340,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +76,7 @@ class _ControllerMenuState extends State<ControllerMenu> {
                       option.name,
                       style: TextStyle(
                         fontFamily: GoogleFonts.bungee().fontFamily,
-                        fontSize: 22,
+                        fontSize: 36,
                         color: Colors.white,
                       ),
                     ),
