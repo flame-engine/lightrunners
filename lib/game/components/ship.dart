@@ -81,9 +81,6 @@ class Ship extends SpriteComponent
         KeyboardHandler,
         HasGameReference<LightRunnersGame>,
         CollisionCallbacks {
-  static const _engine = 125.0;
-  static const _drag = 5.0;
-  static const _bulletSpeed = 300.0;
   static final _random = Random();
 
   Ship(this.playerNumber, this.gamepadId)
@@ -101,6 +98,11 @@ class Ship extends SpriteComponent
   final String? gamepadId; // null means keyboard
   int score = 0;
   late final String spritePath;
+
+  double engineStrength = 125.0;
+  double bulletSpeed = 300.0;
+  double weightFactor = 1.0;
+  final double _drag = 5.0;
 
   final Vector2 velocity = Vector2.zero();
   final Vector2 drag = Vector2.zero();
@@ -131,7 +133,6 @@ class Ship extends SpriteComponent
         parentSize: size,
       ),
     );
-    debugMode = true;
   }
 
   void fire() {
@@ -141,7 +142,7 @@ class Ship extends SpriteComponent
       Bullet(
         ownerPlayerNumber: playerNumber,
         position: positionOfAnchor(Anchor.topCenter),
-        velocity: bulletVector * _bulletSpeed,
+        velocity: bulletVector * bulletSpeed,
         color: paint.color,
       ),
     );
@@ -204,7 +205,7 @@ class Ship extends SpriteComponent
 
     engine
       ..setFrom(move)
-      ..scale(_engine);
+      ..scale(engineStrength);
     drag
       ..setFrom(velocity)
       ..scaleTo(_drag)
@@ -264,8 +265,8 @@ class Ship extends SpriteComponent
       velocity.add(other.velocity..scale(0.1));
       other.removeFromParent();
     } else if (other is Ship && playerNumber < other.playerNumber) {
-      _nextVelocity.setFrom(other.velocity);
-      other.velocity.setFrom(velocity);
+      _nextVelocity.setFrom(other.velocity.scaled(other.weightFactor));
+      other.velocity.setFrom(velocity.scaled(weightFactor));
       velocity.setFrom(_nextVelocity);
     }
   }
