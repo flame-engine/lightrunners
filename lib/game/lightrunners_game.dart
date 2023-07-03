@@ -18,7 +18,7 @@ import 'package:lightrunners/utils/utils.dart';
 
 class LightRunnersGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
-  final List<String?> players;
+  final List<(String?, String?)> players;
   late final Rect playArea;
   late final CameraComponent cameraComponent;
   late final World world;
@@ -78,7 +78,7 @@ class LightRunnersGame extends FlameGame
   void _createShips() {
     ships = {
       for (var i = 0; i < players.length; i++)
-        players[i] ?? 'keyboard_$i': Ship(i, players[i]),
+        players[i].$1 ?? 'keyboard_$i': Ship(i, players[i].$1),
     };
 
     if (ships.isEmpty) {

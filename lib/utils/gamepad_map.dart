@@ -86,7 +86,15 @@ const rightYAxis = GamepadAnalogAxis(
 
 const GamepadKey aButton = GamepadButtonKey(
   linuxKeyName: '0',
-  macosKeyName: '???',
+  macosKeyName: 'a.circle',
+);
+const GamepadKey bButton = GamepadButtonKey(
+  linuxKeyName: '???',
+  macosKeyName: 'b.circle',
+);
+const GamepadKey xButton = GamepadButtonKey(
+  linuxKeyName: '???',
+  macosKeyName: 'x.circle',
 );
 const GamepadKey startButton = GamepadButtonKey(
   linuxKeyName: '7',

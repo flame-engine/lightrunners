@@ -25,7 +25,7 @@ class LobbyPage extends StatefulWidget {
 }
 
 class _LobbyPageState extends State<LobbyPage> {
-  final List<String?> _players = [];
+  final List<(String?, String?)> _players = [];
 
   late StreamSubscription<GamepadEvent> _gamepadSubscription;
   late final FocusNode _focusNode;
@@ -42,8 +42,11 @@ class _LobbyPageState extends State<LobbyPage> {
               .pushReplacement(GamePage.route(players: _players));
         } else if (selectButton.matches(event)) {
           Navigator.of(context).pushReplacement(TitlePage.route());
-        } else if (!_players.contains(event.gamepadId) && event.key == '0') {
-          _players.add(event.gamepadId);
+        } else if (_players
+                .where((element) => element.$1 == event.gamepadId)
+                .isEmpty &&
+            aButton.matches(event)) {
+          _players.add((event.gamepadId, null));
         }
       });
     });
@@ -55,6 +58,12 @@ class _LobbyPageState extends State<LobbyPage> {
     _focusNode.dispose();
 
     super.dispose();
+  }
+
+  void onPlayerIdentified(int id, String playerId) {
+    setState(() {
+      _players[id] = (_players[id].$1, playerId);
+    });
   }
 
   @override
@@ -70,7 +79,7 @@ class _LobbyPageState extends State<LobbyPage> {
       onKey: (RawKeyEvent event) {
         if (event.isKeyPressed(LogicalKeyboardKey.space)) {
           setState(() {
-            _players.add(null);
+            _players.add((null, null));
           });
         } else if (event.isKeyPressed(LogicalKeyboardKey.enter)) {
           // The start key was pressed
@@ -85,10 +94,26 @@ class _LobbyPageState extends State<LobbyPage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                PlayerRectangle(id: 0, players: _players),
-                PlayerRectangle(id: 1, players: _players),
-                PlayerRectangle(id: 2, players: _players),
-                PlayerRectangle(id: 3, players: _players),
+                PlayerRectangle(
+                  id: 0,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 1,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 2,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 3,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
               ],
             ),
             const Center(
@@ -109,10 +134,26 @@ class _LobbyPageState extends State<LobbyPage> {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                PlayerRectangle(id: 4, players: _players),
-                PlayerRectangle(id: 5, players: _players),
-                PlayerRectangle(id: 6, players: _players),
-                PlayerRectangle(id: 7, players: _players),
+                PlayerRectangle(
+                  id: 4,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 5,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 6,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
+                PlayerRectangle(
+                  id: 7,
+                  players: _players,
+                  onPlayerIdentified: onPlayerIdentified,
+                ),
               ],
             ),
           ],
@@ -124,11 +165,13 @@ class _LobbyPageState extends State<LobbyPage> {
 
 class PlayerRectangle extends StatelessWidget {
   final int id;
-  final List<String?> players;
+  final List<(String?, String?)> players;
+  final void Function(int, String) onPlayerIdentified;
 
   const PlayerRectangle({
     required this.id,
     required this.players,
+    required this.onPlayerIdentified,
     super.key,
   });
 
@@ -136,6 +179,23 @@ class PlayerRectangle extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = GamePalette.shipValues[id];
     final hasJoined = id < players.length;
+    final hasIdentified = hasJoined && players[id].$2 != null;
+
+    final child = hasJoined && !hasIdentified
+        ? PlayerIdentification(
+            gamePadId: players[id].$1!,
+            onPlayerIdentified: (String playerId) {
+              onPlayerIdentified(id, playerId);
+            },
+          )
+        : Text(
+            hasJoined ? 'Ready' : 'Waiting...',
+            style: TextStyle(
+              fontFamily: GoogleFonts.bungee().fontFamily,
+              color: color,
+              fontSize: 24.0,
+            ),
+          );
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -154,17 +214,145 @@ class PlayerRectangle extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
         ),
-        child: Center(
-          child: Text(
-            hasJoined ? 'Joined' : 'Waiting...',
-            style: TextStyle(
-              fontFamily: GoogleFonts.bungee().fontFamily,
-              color: color,
-              fontSize: 24.0,
-            ),
-          ),
-        ),
+        child: Center(child: child),
       ),
     );
+  }
+}
+
+class PlayerIdentification extends StatefulWidget {
+  final String gamePadId;
+
+  const PlayerIdentification({
+    required this.gamePadId,
+    required this.onPlayerIdentified,
+    super.key,
+  });
+
+  final void Function(String) onPlayerIdentified;
+
+  @override
+  State<PlayerIdentification> createState() => _PlayerIdentificationState();
+}
+
+class _PlayerIdentificationState extends State<PlayerIdentification> {
+  var _selectedPlayerMode = false;
+  var _playerId = '0000';
+
+  var _cursor = 0;
+
+  late StreamSubscription<GamepadEvent> _gamepadSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
+      setState(() {
+        if (event.gamepadId == widget.gamePadId) {
+          if (_selectedPlayerMode == false) {
+            if (aButton.matches(event)) {
+              setState(() {
+                _selectedPlayerMode = true;
+              });
+            } else if (bButton.matches(event)) {
+              widget.onPlayerIdentified('guest');
+            }
+          } else {
+            // TODO(any): replace by up and down arrows.
+            if (aButton.matches(event)) {
+              // increment current digit
+              final digit =
+                  int.parse(_playerId.substring(_cursor, _cursor + 1));
+              final newDigit = (digit + 1) % 10;
+              setState(() {
+                _playerId = _playerId.replaceRange(
+                  _cursor,
+                  _cursor + 1,
+                  '$newDigit',
+                );
+              });
+            } else if (bButton.matches(event)) {
+              // move to next cursor
+              setState(() {
+                _cursor = (_cursor + 1) % _playerId.characters.length;
+              });
+            } else if (xButton.matches(event)) {
+              // indentify player
+              widget.onPlayerIdentified(_playerId);
+            }
+          }
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _gamepadSubscription.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_selectedPlayerMode) {
+      return Column(
+        children: [
+          const SizedBox(height: 14),
+          Text(
+            'Enter player id',
+            style: TextStyle(
+              fontFamily: GoogleFonts.bungee().fontFamily,
+              color: Colors.white,
+              fontSize: 14.0,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              for (var i = 0; i < _playerId.characters.length; i++)
+                Expanded(
+                  child: Text(
+                    _playerId.substring(i, i + 1),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: GoogleFonts.bungee().fontFamily,
+                      color: Colors.white,
+                      fontSize: 24.0,
+                      decoration: _cursor == i
+                          ? TextDecoration.underline
+                          : TextDecoration.none,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            '(A) to identify Player',
+            style: TextStyle(
+              fontFamily: GoogleFonts.bungee().fontFamily,
+              color: Colors.white,
+              fontSize: 14.0,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            '(B) to play as guest',
+            style: TextStyle(
+              fontFamily: GoogleFonts.bungee().fontFamily,
+              color: Colors.white,
+              fontSize: 14.0,
+            ),
+          ),
+        ],
+      );
+    }
   }
 }

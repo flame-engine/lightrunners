@@ -7,9 +7,9 @@ import 'package:lightrunners/game/game.dart';
 class GamePage extends StatefulWidget {
   const GamePage({required this.players, super.key});
 
-  final List<String?> players;
+  final List<(String?, String?)> players;
 
-  static Route<void> route({required List<String?> players}) {
+  static Route<void> route({required List<(String?, String?)> players}) {
     return MaterialPageRoute<void>(
       maintainState: false,
       builder: (_) => GamePage(players: players),
