@@ -82,7 +82,7 @@ class PowerUp extends SpriteComponent
       case PowerUpType.weight:
         ship.weightFactor *= 2;
       case PowerUpType.secret:
-        // Does absolutely nothing, very mysterious!
+      // Does absolutely nothing, very mysterious!
     }
   }
 }
