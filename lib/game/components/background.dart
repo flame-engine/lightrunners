@@ -16,6 +16,11 @@ const _numberShades = 5;
 const _shadeStep = 0.1;
 const _colorMoveSpeed = 30;
 final _emptyColor = GamePalette.black.brighten(0.1);
+final _borderPaint = Paint()
+  ..color = GamePalette.black
+  ..strokeWidth = 2
+  ..style = PaintingStyle.stroke
+  ..filterQuality = FilterQuality.high;
 
 final _random = Random();
 
@@ -80,6 +85,10 @@ class Background extends PositionComponent
     for (final t in mesh) {
       final shadedColor = currentColor.brighten(t.shadeLevel * _shadeStep);
       canvas.drawPath(t.path, paint..color = shadedColor);
+    }
+
+    for (final t in mesh) {
+      canvas.drawPath(t.path, _borderPaint);
     }
   }
 
