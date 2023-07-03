@@ -4,10 +4,8 @@ import 'package:firebase_admin/firebase_admin.dart';
 import 'package:firedart/firedart.dart';
 import 'package:firedart/firestore/token_authenticator.dart';
 import 'package:lightrunners/firebase/score.dart';
-import 'package:uuid/uuid.dart';
 
 class Scores {
-  static const uuid = Uuid();
   static Firestore? _firestore;
 
   Scores._();
@@ -20,7 +18,7 @@ class Scores {
         ),
       )
       .auth()
-      .createCustomToken(uuid.v4());
+      .createCustomToken(_getServiceAccountUuid());
 
   static Future<void> init() async {
     const projectId = 'lightrunners-e89a9';
@@ -78,5 +76,9 @@ class Scores {
     } else {
       print('Error: Score not found for player id $playerId.');
     }
+  }
+
+  static String _getServiceAccountUuid() {
+    return File('.secrets/uuid.conf').readAsStringSync();
   }
 }
