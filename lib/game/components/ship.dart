@@ -128,7 +128,6 @@ class Ship extends SpriteComponent
         parentSize: size,
       ),
     );
-    debugMode = true;
   }
 
   void fire() {

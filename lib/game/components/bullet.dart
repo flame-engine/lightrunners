@@ -19,7 +19,7 @@ class Bullet extends CircleComponent with HasGameReference<LightRunnersGame> {
     required this.velocity,
     required this.color,
   }) : super(
-          radius: bulletRadius,
+          radius: velocity.length / 32,
           anchor: Anchor.center,
           paint: GamePalette.bulletPaints[ownerPlayerNumber],
         );

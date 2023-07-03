@@ -23,7 +23,7 @@ class CountDown extends PositionComponent {
     return TextPaint(
       style: TextStyle(
         fontFamily: GoogleFonts.bungee().fontFamily,
-        fontSize: 18,
+        fontSize: 28,
         color: GamePalette.white,
       ),
     );
@@ -39,7 +39,7 @@ class CountDown extends PositionComponent {
     timer = timerComponent.timer;
     add(timerComponent);
 
-    rRect = RRect.fromRectAndRadius(Vector2.zero() & Vector2(180, 50), _radius);
+    rRect = RRect.fromRectAndRadius(Vector2.zero() & Vector2(250, 60), _radius);
   }
 
   @override
