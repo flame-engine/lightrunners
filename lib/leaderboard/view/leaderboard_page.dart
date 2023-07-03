@@ -89,6 +89,19 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                       color: Colors.white,
                     ),
                   ),
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pushReplacement(
+                      TitlePage.route(),
+                    ),
+                    child: Text(
+                      'Back',
+                      style: TextStyle(
+                        fontFamily: bungee,
+                        fontSize: 48,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
