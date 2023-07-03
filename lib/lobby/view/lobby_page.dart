@@ -291,9 +291,8 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
 
   @override
   void dispose() {
-    super.dispose();
-
     _gamepadSubscription.cancel();
+    super.dispose();
   }
 
   @override
