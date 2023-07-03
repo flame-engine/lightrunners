@@ -9,6 +9,7 @@ import 'package:flame/geometry.dart';
 import 'package:flutter/services.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:lightrunners/game/game.dart';
+import 'package:lightrunners/game/player.dart';
 import 'package:lightrunners/ui/ui.dart';
 import 'package:lightrunners/utils/gamepad_map.dart';
 import 'package:lightrunners/utils/input_handler_utils.dart';
@@ -86,12 +87,16 @@ class Ship extends SpriteComponent
   static final _random = Random();
 
   Ship(this.playerNumber, this.gamepadId)
-      : moveJoystick = _makeJoystick(gamepadId, leftXAxis, leftYAxis),
+      : player = Player(
+          color: _shipColors[playerNumber].color,
+        ),
+        moveJoystick = _makeJoystick(gamepadId, leftXAxis, leftYAxis),
         super(size: Vector2(40, 80), anchor: Anchor.center) {
     paint = _shipColors[playerNumber];
     spritePath = shipSprites[playerNumber];
   }
 
+  final Player player;
   final int playerNumber;
   final String? gamepadId; // null means keyboard
   int score = 0;

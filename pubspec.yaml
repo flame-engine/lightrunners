@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   collection: ^1.17.0
+  firedart: ^0.9.5
   flame: ^1.8.0
   flame_audio: ^2.0.3
   flutter:

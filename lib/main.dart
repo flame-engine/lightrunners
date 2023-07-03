@@ -1,12 +1,14 @@
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lightrunners/firebase/scores.dart';
 import 'package:lightrunners/shaders/shaders.dart';
 import 'package:lightrunners/title/title.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.device.fullScreen();
+  Scores.init();
   runApp(
     CRTShader(
       enabled: true,

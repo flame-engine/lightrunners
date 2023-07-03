@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lightrunners/firebase/score.dart';
+import 'package:lightrunners/firebase/scores.dart';
 import 'package:lightrunners/title/title.dart';
 import 'package:lightrunners/utils/gamepad_navigator.dart';
 import 'package:lightrunners/widgets/widgets.dart';
@@ -13,13 +15,6 @@ const _maxCharactersScoreBoard = 26;
 const _lightrunnersInfoBlob =
     '''Light Runners was made with 💙 by Blue Fire and Invertase for Fluttercon 2023
 ''';
-final _leaderboard = [
-  (name: 'Erick', score: 100),
-  (name: 'Luan', score: 90),
-  (name: 'Renan', score: 80),
-  (name: 'Spydon', score: 70),
-  (name: 'Wolfenrain', score: 60),
-];
 
 class LeaderboardPage extends StatefulWidget {
   const LeaderboardPage({
@@ -41,6 +36,9 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
   late StreamSubscription<GamepadEvent> _gamepadSubscription;
   late GamepadNavigator _gamepadNavigator;
 
+  bool loading = true;
+  List<Score> scores = [];
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +46,15 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
       onAny: () => Navigator.of(context).pushReplacement(TitlePage.route()),
     );
     _gamepadSubscription = Gamepads.events.listen(_gamepadNavigator.handle);
+    _updateScores();
+  }
+
+  Future<void> _updateScores() async {
+    final scores = await Scores.topScores();
+    setState(() {
+      loading = false;
+      this.scores = scores;
+    });
   }
 
   @override
@@ -92,16 +99,19 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (final entry in _leaderboard)
-                    Text(
-                      _toScoreboardLine(entry),
-                      style: TextStyle(
-                        fontFamily: major,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 38,
-                        color: Colors.white,
-                      ),
-                    )
+                  if (loading)
+                    const CircularProgressIndicator()
+                  else
+                    for (final score in scores)
+                      Text(
+                        _toScoreboardLine(score),
+                        style: TextStyle(
+                          fontFamily: major,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 38,
+                          color: Colors.white,
+                        ),
+                      )
                 ],
               ),
             ),
@@ -111,14 +121,16 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
     );
   }
 
-  String _toScoreboardLine(({String name, int score}) entry) {
-    final name = entry.name.substring(
+  String _toScoreboardLine(Score record) {
+    final name = record.email.substring(
       0,
-      min(entry.name.length, _maxCharactersScoreBoard - _maxScoreDigits - 1),
+      min(record.email.length, _maxCharactersScoreBoard - _maxScoreDigits - 1),
     );
     final maxScore = pow(10, _maxScoreDigits) - 1;
-    final score =
-        entry.score.clamp(0, maxScore).toString().padLeft(_maxScoreDigits, '0');
+    final score = record.score
+        .clamp(0, maxScore)
+        .toString()
+        .padLeft(_maxScoreDigits, '0');
     final dotDotDot =
         '.' * (_maxCharactersScoreBoard - name.length - score.length);
 

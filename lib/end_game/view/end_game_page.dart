@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lightrunners/firebase/score_calculator.dart';
+import 'package:lightrunners/firebase/scores.dart';
 import 'package:lightrunners/game/game.dart';
+import 'package:lightrunners/game/player.dart';
 import 'package:lightrunners/title/view/title_page.dart';
 import 'package:lightrunners/ui/ui.dart';
 import 'package:lightrunners/utils/gamepad_navigator.dart';
@@ -11,16 +14,16 @@ import 'package:lightrunners/widgets/widgets.dart';
 
 class EndGamePage extends StatefulWidget {
   const EndGamePage({
-    required this.scores,
+    required this.points,
     super.key,
   });
 
-  final Map<Color, int> scores;
+  final Map<Player, int> points;
 
-  static Route<void> route(Map<Color, int> scores) {
+  static Route<void> route(Map<Player, int> points) {
     return MaterialPageRoute<void>(
       maintainState: false,
-      builder: (_) => EndGamePage(scores: scores),
+      builder: (_) => EndGamePage(points: points),
     );
   }
 
@@ -32,11 +35,20 @@ class _EndGamePageState extends State<EndGamePage> {
   late StreamSubscription<GamepadEvent> _gamepadSubscription;
   late GamepadNavigator _gamepadNavigator;
 
+  // TODO(any): display loading indicator on screen
+  bool updatingFirebase = true;
+
   @override
   void initState() {
     super.initState();
+    _updateFirebase();
     _gamepadNavigator = GamepadNavigator(
-      onAny: () => Navigator.of(context).pushReplacement(TitlePage.route()),
+      onAny: () {
+        if (updatingFirebase) {
+          return;
+        }
+        Navigator.of(context).pushReplacement(TitlePage.route());
+      },
     );
     _gamepadSubscription = Gamepads.events.listen(_gamepadNavigator.handle);
   }
@@ -48,11 +60,25 @@ class _EndGamePageState extends State<EndGamePage> {
     super.dispose();
   }
 
+  Future<void> _updateFirebase() async {
+    final scores = ScoreCalculator.computeScores(widget.points);
+    final futures = scores.entries
+        .where((entry) => entry.key.playerId != null)
+        .map((entry) {
+      return Scores.updateScore(
+        playerId: entry.key.playerId!,
+        score: entry.value,
+      );
+    });
+    await Future.wait(futures);
+    setState(() => updatingFirebase = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final fontFamily = GoogleFonts.bungee().fontFamily;
 
-    final scores = widget.scores.entries.toList()
+    final scores = widget.points.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
     const baseSize = 64;
@@ -88,7 +114,7 @@ class _EndGamePageState extends State<EndGamePage> {
                       child: Column(
                         children: [
                           Image.asset(
-                            'assets/images/ships/${shipSprites[GamePalette.shipValues.indexOf(scores[i].key)]}',
+                            'assets/images/ships/${shipSprites[GamePalette.shipValues.indexOf(scores[i].key.color)]}',
                             width: baseSize.toDouble(),
                           ),
                           const SizedBox(height: 16),
@@ -97,7 +123,7 @@ class _EndGamePageState extends State<EndGamePage> {
                             style: TextStyle(
                               fontFamily: fontFamily,
                               fontSize: 32,
-                              color: scores[i].key,
+                              color: scores[i].key.color,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -105,7 +131,7 @@ class _EndGamePageState extends State<EndGamePage> {
                             padding: const EdgeInsets.all(16),
                             width: 180,
                             decoration: BoxDecoration(
-                              color: scores[i].key,
+                              color: scores[i].key.color,
                               backgroundBlendMode: BlendMode.colorBurn,
                               boxShadow: [
                                 BoxShadow(
