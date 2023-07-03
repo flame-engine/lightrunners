@@ -9,6 +9,8 @@ environment:
 
 dependencies:
   collection: ^1.17.0
+  firebase_admin: ^0.2.0
+  firedart: ^0.9.5
   flame: ^1.8.0
   flame_audio: ^2.0.3
   flutter:
@@ -17,6 +19,7 @@ dependencies:
   gamepads: ^0.1.1
   google_fonts: ^4.0.4
   phased: ^0.0.3
+  uuid: ^3.0.7
   vector_math: ^2.1.4
 
 dev_dependencies:

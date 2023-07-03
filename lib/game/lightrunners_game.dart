@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
@@ -11,6 +12,7 @@ import 'package:lightrunners/game/components/powerup.dart';
 import 'package:lightrunners/game/components/score_panel.dart';
 import 'package:lightrunners/game/components/spotlight.dart';
 import 'package:lightrunners/game/game.dart';
+import 'package:lightrunners/game/player.dart';
 import 'package:lightrunners/utils/constants.dart';
 import 'package:lightrunners/utils/utils.dart';
 
@@ -23,7 +25,7 @@ class LightRunnersGame extends FlameGame
   late final Map<String, Ship> ships;
 
   StreamSubscription<GamepadEvent>? _subscription;
-  final void Function(Map<Color, int>) onEndGame;
+  final void Function(Map<Player, int>) onEndGame;
 
   LightRunnersGame({required this.players, required this.onEndGame});
 
@@ -56,7 +58,7 @@ class LightRunnersGame extends FlameGame
         onTimeUp: () {
           countDown.removeFromParent();
           onEndGame({
-            for (final ship in ships.values) ship.paint.color: ship.score,
+            for (final ship in ships.values) ship.player: ship.score,
           });
         },
       ),
@@ -82,6 +84,11 @@ class LightRunnersGame extends FlameGame
     if (ships.isEmpty) {
       print('No controllers found, using keyboard only');
       ships[''] = Ship(0, null);
+    }
+
+    // TODO(any): correctly configure player numbers from the app
+    for (final ship in ships.values) {
+      ship.player.playerId = Random().nextInt(999);
     }
 
     _subscription = Gamepads.events.listen((event) {
