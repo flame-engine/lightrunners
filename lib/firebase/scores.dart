@@ -67,8 +67,14 @@ class Scores {
     final document =
         firestore.collection('scores').document(playerId.toString());
     if (await document.exists) {
-      print('Updating score for player id $playerId to $score.');
-      await document.update({'score': score});
+      final current = await document.get();
+      final currentScore = Score.fromDocument(current).score;
+      final newScore = currentScore + score;
+      print(
+        'Updating score for player id $playerId '
+        'from $currentScore to $newScore.',
+      );
+      await document.update({'score': newScore});
     } else {
       print('Error: Score not found for player id $playerId.');
     }
