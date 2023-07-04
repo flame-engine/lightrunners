@@ -79,8 +79,8 @@ class Ship extends SpriteComponent
         CollisionCallbacks {
   static final _random = Random();
 
-  Ship(this.player) :
-        moveJoystick = _makeJoystick(player.gamepadId, leftXAxis, leftYAxis),
+  Ship(this.player)
+      : moveJoystick = _makeJoystick(player.gamepadId, leftXAxis, leftYAxis),
         super(size: Vector2(40, 80), anchor: Anchor.center) {
     paint = Paint()..color = player.color;
     spritePath = shipSprites[player.slotNumber];
@@ -94,6 +94,7 @@ class Ship extends SpriteComponent
   double bulletSpeed = 400.0;
   double weightFactor = 1.0;
   double dragFactor = 5.0;
+  final double maxVelocity = 1500;
 
   final Vector2 velocity = Vector2.zero();
   final Vector2 drag = Vector2.zero();
@@ -212,7 +213,8 @@ class Ship extends SpriteComponent
 
     _velocityTmp
       ..setFrom(velocity)
-      ..scale(dt);
+      ..scale(dt)
+      ..clampLength(0, maxVelocity * dt);
     _accelerationTmp
       ..setFrom(acceleration)
       ..scale(dt2 / 2);
