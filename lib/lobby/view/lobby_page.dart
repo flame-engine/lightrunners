@@ -39,7 +39,7 @@ class _LobbyPageState extends State<LobbyPage> {
     _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
       setState(() {
         if (startButton.matches(event) &&
-            !_players.any((p) => p.username == null)) {
+            !_players.any((p) => p.playerId == null)) {
           Navigator.of(context)
               .pushReplacement(GamePage.route(players: _players));
         } else if (selectButton.matches(event)) {
@@ -185,7 +185,7 @@ class PlayerRectangle extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = GamePalette.shipValues[id];
     final hasJoined = id < players.length;
-    final hasIdentified = hasJoined && players[id].username != null;
+    final hasIdentified = hasJoined && players[id].playerId != null;
 
     final child = hasJoined && !hasIdentified
         ? PlayerIdentification(
@@ -265,11 +265,12 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
               widget.onPlayerIdentified(widget.slotNumber, null);
             }
           } else {
-            if (aButton.matches(event)) {
+            if (aButton.matches(event) || bButton.matches(event)) {
+              final delta = aButton.matches(event) ? 1 : -1;
               // Increment current digit
               final digit =
                   int.parse(_playerId.substring(_cursor, _cursor + 1));
-              final newDigit = (digit + 1) % 10;
+              final newDigit = (digit + delta) % 10;
               setState(() {
                 _playerId = _playerId.replaceRange(
                   _cursor,
@@ -281,6 +282,11 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
               // Move the cursor to the next digit if R1 is fully pressed
               setState(() {
                 _cursor = (_cursor + 1) % _playerId.characters.length;
+              });
+            } else if (l1Bumper.matches(event) && event.value > 30000) {
+              // Move the cursor to the previous digit if L1 is fully pressed
+              setState(() {
+                _cursor = (_cursor - 1) % _playerId.characters.length;
               });
             } else if (startButton.matches(event)) {
               // Identify player

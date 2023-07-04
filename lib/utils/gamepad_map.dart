@@ -105,4 +105,5 @@ const GamepadKey selectButton = GamepadButtonKey(
   macosKeyName: '???',
 );
 
+const GamepadKey l1Bumper = GamepadBumperKey(key: '2');
 const GamepadKey r1Bumper = GamepadBumperKey(key: '5');
