@@ -35,8 +35,10 @@ class _EndGamePageState extends State<EndGamePage> {
   late StreamSubscription<GamepadEvent> _gamepadSubscription;
   late GamepadNavigator _gamepadNavigator;
 
-  // TODO(any): display loading indicator on screen
   bool updatingFirebase = true;
+  bool minDurationElapsed = false;
+
+  bool get canMoveOn => !updatingFirebase && minDurationElapsed;
 
   @override
   void initState() {
@@ -44,13 +46,15 @@ class _EndGamePageState extends State<EndGamePage> {
     _updateFirebase();
     _gamepadNavigator = GamepadNavigator(
       onAny: () {
-        if (updatingFirebase) {
-          return;
+        if (canMoveOn) {
+          Navigator.of(context).pushReplacement(TitlePage.route());
         }
-        Navigator.of(context).pushReplacement(TitlePage.route());
       },
     );
     _gamepadSubscription = Gamepads.events.listen(_gamepadNavigator.handle);
+    Future.delayed(const Duration(seconds: 10), () {
+      setState(() => minDurationElapsed = true);
+    });
   }
 
   @override
