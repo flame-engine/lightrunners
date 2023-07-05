@@ -52,7 +52,7 @@ class _EndGamePageState extends State<EndGamePage> {
       },
     );
     _gamepadSubscription = Gamepads.events.listen(_gamepadNavigator.handle);
-    Future.delayed(const Duration(seconds: 20), () {
+    Future.delayed(const Duration(seconds: 10), () {
       setState(() => minDurationElapsed = true);
     });
   }
