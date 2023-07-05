@@ -93,7 +93,7 @@ class Ship extends SpriteComponent
   double engineStrength = 125.0;
   double bulletSpeed = 400.0;
   double weightFactor = 1.0;
-  double dragFactor = 5.0;
+  double dragFactor = 7.0;
   final double maxVelocity = 1500;
 
   final Vector2 velocity = Vector2.zero();
