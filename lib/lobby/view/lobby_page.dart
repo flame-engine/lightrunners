@@ -39,6 +39,7 @@ class _LobbyPageState extends State<LobbyPage> {
     _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
       setState(() {
         if (startButton.matches(event) &&
+            _players.isNotEmpty &&
             !_players.any((p) => p.playerId == null)) {
           Navigator.of(context)
               .pushReplacement(GamePage.route(players: _players));
