@@ -69,7 +69,7 @@ class _LobbyPageState extends State<LobbyPage> {
   Widget build(BuildContext context) {
     const centerTextStyle = TextStyle(
       color: GamePalette.lightBlue,
-      fontSize: 48.0,
+      fontSize: 68.0,
       fontWeight: FontWeight.bold,
     );
 
@@ -128,7 +128,10 @@ class _LobbyPageState extends State<LobbyPage> {
                     style: centerTextStyle,
                   ),
                   const SizedBox(height: 50),
-                  Image.asset('assets/images/qr.png'),
+                  Image.asset(
+                    'assets/images/qr.png',
+                    width: 600,
+                  ),
                 ],
               ),
             ),
