@@ -115,18 +115,20 @@ class _LobbyPageState extends State<LobbyPage> {
                 ),
               ],
             ),
-            const Center(
+            Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Waiting for',
                     style: centerTextStyle,
                   ),
-                  Text(
+                  const Text(
                     'players...',
                     style: centerTextStyle,
                   ),
+                  const SizedBox(height: 50),
+                  Image.asset('assets/images/qr.png'),
                 ],
               ),
             ),
@@ -336,7 +338,7 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
                     style: TextStyle(
                       fontFamily: GoogleFonts.bungee().fontFamily,
                       color: Colors.white,
-                      fontSize: 28.0,
+                      fontSize: 38.0,
                       decoration: _cursor == i
                           ? TextDecoration.underline
                           : TextDecoration.none,
