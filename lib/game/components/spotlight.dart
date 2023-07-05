@@ -21,6 +21,7 @@ class Spotlight extends CircleComponent
 
   final List<Ship> currentShips = [];
   Ship? get activeShip => currentShips.length == 1 ? currentShips.first : null;
+
   late final TimerComponent _scoreTimer;
   late final Rect _visibleArea;
 
@@ -36,13 +37,19 @@ class Spotlight extends CircleComponent
         radius / 10,
       );
     _scoreTimer = TimerComponent(
-      period: 1.0,
+      period: 0.5,
       repeat: true,
       autoStart: false,
       onTick: () => currentShips.firstOrNull?.score++,
     );
     _visibleArea = game.playArea.deflate(_spotlightRadius);
-    addAll([CircleHitbox(isSolid: true), _scoreTimer]);
+    addAll([
+      CircleHitbox(
+        isSolid: true,
+        collisionType: CollisionType.passive,
+      ),
+      _scoreTimer
+    ]);
     _updateRandomTarget();
     _updateColor();
   }
