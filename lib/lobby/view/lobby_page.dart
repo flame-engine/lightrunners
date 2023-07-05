@@ -128,10 +128,13 @@ class _LobbyPageState extends State<LobbyPage> {
                     style: centerTextStyle,
                   ),
                   const SizedBox(height: 50),
-                  Image.asset(
-                    'assets/images/qr.png',
-                    width: 600,
-                    height: 600,
+                  Align(
+                    child: Image.asset(
+                      'assets/images/qr.png',
+                      width: 600,
+                      height: 600,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ],
               ),
