@@ -131,6 +131,7 @@ class _LobbyPageState extends State<LobbyPage> {
                   Image.asset(
                     'assets/images/qr.png',
                     width: 600,
+                    height: 600,
                   ),
                 ],
               ),
