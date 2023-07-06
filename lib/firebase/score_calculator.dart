@@ -17,7 +17,7 @@ class ScoreCalculator {
   static Map<Player, int> computeScores(Map<Player, int> points) {
     final scores = points.entries
         .toList()
-        .sortedBy<num>((entry) => entry.value)
+        .sortedBy<num>((entry) => -entry.value)
         .map((entry) => _PlayerScore(entry.key))
         .toList();
 
