@@ -48,7 +48,7 @@ class Spotlight extends CircleComponent
         isSolid: true,
         collisionType: CollisionType.passive,
       ),
-      _scoreTimer
+      _scoreTimer,
     ]);
     _updateRandomTarget();
     _updateColor();

@@ -124,7 +124,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> {
                           fontSize: 38,
                           color: Colors.white,
                         ),
-                      )
+                      ),
                 ],
               ),
             ),

@@ -109,7 +109,7 @@ class _EndGamePageState extends State<EndGamePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              for (var i in [1, 0, 2])
+              for (final i in [1, 0, 2])
                 if (i < scores.length)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
