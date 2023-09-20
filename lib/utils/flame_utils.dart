@@ -21,22 +21,6 @@ Vector2 lineMidPoint(LineSegment line) {
   return line.from + (line.to - line.from) / 2;
 }
 
-extension RectExtension on Rect {
-  Rectangle toFlameRectangle() => Rectangle.fromLTRB(left, top, width, height);
-}
-
-// ignore: non_constant_identifier_names
-Rectangle Rectangle_fromCenter({
-  required Vector2 center,
-  required Vector2 size,
-}) {
-  final halfSize = size / 2;
-  return Rectangle.fromPoints(
-    center - halfSize,
-    center + halfSize,
-  );
-}
-
 extension RectangleExtension on Rectangle {
   Rect toRect() => Rect.fromLTWH(left, top, width, height);
 

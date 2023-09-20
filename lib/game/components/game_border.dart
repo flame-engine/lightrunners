@@ -8,7 +8,6 @@ import 'package:flame/extensions.dart';
 import 'package:flame/geometry.dart';
 import 'package:flame/palette.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
-import 'package:lightrunners/utils/flame_utils.dart';
 
 const _radius = Radius.circular(5);
 const _rotationSpeed = 1.0;
