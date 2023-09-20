@@ -78,6 +78,32 @@ class Scores {
     }
   }
 
+  static Future<Iterable<Score>> fetchTopPlayers({
+    required Iterable<int> playerIds,
+  }) async {
+    final firestore = _firestore;
+    if (firestore == null) {
+      print('Error: Firestore not initialized.');
+      return [];
+    } else if (playerIds.isEmpty) {
+      print('No registered players playing this round.');
+      return [];
+    }
+
+    final topPlayers = (await firestore
+            .collection('scores')
+            .where(
+              'playerId',
+              whereIn: playerIds.map((i) => i.toString()).toList(),
+            )
+            .where('score', isGreaterThanOrEqualTo: 1)
+            .get())
+        .map(Score.fromDocument)
+        .toList();
+    print(topPlayers);
+    return topPlayers;
+  }
+
   static String _getServiceAccountUuid() {
     return File('.secrets/uuid.conf').readAsStringSync();
   }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gamepads/gamepads.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lightrunners/firebase/score.dart';
 import 'package:lightrunners/firebase/score_calculator.dart';
 import 'package:lightrunners/firebase/scores.dart';
 import 'package:lightrunners/game/game.dart';
@@ -36,14 +37,17 @@ class _EndGamePageState extends State<EndGamePage> {
   late GamepadNavigator _gamepadNavigator;
 
   bool updatingFirebase = true;
+  bool receivedTopPlayers = false;
   bool minDurationElapsed = false;
+  Iterable<Score> topPlayers = [];
 
-  bool get canMoveOn => !updatingFirebase && minDurationElapsed;
+  bool get canMoveOn =>
+      !updatingFirebase && minDurationElapsed && receivedTopPlayers;
 
   @override
   void initState() {
     super.initState();
-    _updateFirebase();
+    _updateFirebase().whenComplete(_fetchTopPlayers);
     _gamepadNavigator = GamepadNavigator(
       onAny: () {
         if (canMoveOn) {
@@ -76,6 +80,16 @@ class _EndGamePageState extends State<EndGamePage> {
     });
     await Future.wait(futures);
     setState(() => updatingFirebase = false);
+  }
+
+  Future<void> _fetchTopPlayers() async {
+    final topPlayers = await Scores.fetchTopPlayers(
+      playerIds: widget.points.keys.map((p) => p.playerId).whereType<int>(),
+    );
+    setState(() {
+      this.topPlayers = topPlayers;
+      receivedTopPlayers = true;
+    });
   }
 
   @override
@@ -158,6 +172,33 @@ class _EndGamePageState extends State<EndGamePage> {
                   ),
             ],
           ),
+          if (topPlayers.isNotEmpty) ...[
+            Text(
+              'Congratulations, the following players have received\n'
+              'an achievement and can scan the QR code with the F3 app!',
+              style: TextStyle(
+                fontFamily: fontFamily,
+                fontSize: 32,
+                color: GamePalette.yellow,
+              ),
+            ),
+            Text(
+              topPlayers.map((p) => p.username).join(' | '),
+              style: TextStyle(
+                fontFamily: fontFamily,
+                fontSize: 32,
+                color: GamePalette.lightBlue,
+              ),
+            ),
+            Align(
+              child: Image.asset(
+                'assets/images/qr-top.png',
+                width: 600,
+                height: 600,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
           OpacityBlinker(
             child: TextButton(
               onPressed: () =>
