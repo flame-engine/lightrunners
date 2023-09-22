@@ -280,8 +280,8 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
             if (leftYAxis.matches(event) || rightYAxis.matches(event)) {
               final delta = event.value.sign;
               if ((_lastChange != null &&
-                      event.timestamp - _lastChange! < 500) ||
-                  delta != _lastDirection) {
+                      event.timestamp - _lastChange! < 500) &&
+                  delta == _lastDirection) {
                 return;
               }
               _lastChange = event.timestamp;
