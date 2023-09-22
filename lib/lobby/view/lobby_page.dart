@@ -256,6 +256,8 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
   var _selectedPlayerMode = false;
   var _playerId = '0000';
   var _cursor = 0;
+  int? _lastChange;
+  int? _lastDirection;
 
   late StreamSubscription<GamepadEvent> _gamepadSubscription;
 
@@ -265,6 +267,13 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
 
     _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
       setState(() {
+        final isYaxis = leftYAxis.matches(event) || rightYAxis.matches(event);
+        final isRight =
+            (leftXAxis.matches(event) || rightXAxis.matches(event)) &&
+                event.value > 30000;
+        final isLeft =
+            (leftXAxis.matches(event) || rightXAxis.matches(event)) &&
+                event.value < -30000;
         if (event.gamepadId == widget.gamepadId) {
           if (_selectedPlayerMode == false) {
             if (aButton.matches(event)) {
@@ -275,8 +284,16 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
               widget.onPlayerIdentified(widget.slotNumber, null);
             }
           } else {
-            if (aButton.matches(event) || bButton.matches(event)) {
-              final delta = aButton.matches(event) ? 1 : -1;
+            if (isYaxis) {
+              final delta = event.value.sign.toInt() * -1;
+              if ((_lastChange != null &&
+                      event.timestamp - _lastChange! < 200 &&
+                      delta == _lastDirection) ||
+                  event.value.abs() < 5000) {
+                return;
+              }
+              _lastChange = event.timestamp;
+              _lastDirection = delta;
               // Increment current digit
               final digit =
                   int.parse(_playerId.substring(_cursor, _cursor + 1));
@@ -288,12 +305,14 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
                   '$newDigit',
                 );
               });
-            } else if (r1Bumper.matches(event) && event.value > 30000) {
+            } else if (isRight ||
+                (r1Bumper.matches(event) && event.value > 30000)) {
               // Move the cursor to the next digit if R1 is fully pressed
               setState(() {
                 _cursor = (_cursor + 1) % _playerId.characters.length;
               });
-            } else if (l1Bumper.matches(event) && event.value > 30000) {
+            } else if (isLeft ||
+                (l1Bumper.matches(event) && event.value > 30000)) {
               // Move the cursor to the previous digit if L1 is fully pressed
               setState(() {
                 _cursor = (_cursor - 1) % _playerId.characters.length;
