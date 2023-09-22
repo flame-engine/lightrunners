@@ -256,6 +256,8 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
   var _selectedPlayerMode = false;
   var _playerId = '0000';
   var _cursor = 0;
+  int? _lastChange;
+  double? _lastDirection;
 
   late StreamSubscription<GamepadEvent> _gamepadSubscription;
 
@@ -276,8 +278,14 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
             }
           } else {
             if (leftYAxis.matches(event) || rightYAxis.matches(event)) {
-              print(event.type.name);
               final delta = event.value.sign;
+              if ((_lastChange != null &&
+                      event.timestamp - _lastChange! < 500) ||
+                  delta != _lastDirection) {
+                return;
+              }
+              _lastChange = event.timestamp;
+              _lastDirection = delta;
               // Increment current digit
               final digit =
                   int.parse(_playerId.substring(_cursor, _cursor + 1));
