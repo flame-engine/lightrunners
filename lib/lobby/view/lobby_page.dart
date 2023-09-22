@@ -278,9 +278,9 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
             }
           } else {
             if (leftYAxis.matches(event) || rightYAxis.matches(event)) {
-              final delta = event.value.sign.toInt();
-              if ((_lastChange != null &&
-                      event.timestamp - _lastChange! < 500) &&
+              final delta = event.value.sign.toInt() * -1;
+              if (_lastChange != null &&
+                  event.timestamp - _lastChange! < 200 &&
                   delta == _lastDirection) {
                 return;
               }
