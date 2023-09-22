@@ -36,6 +36,7 @@ class _EndGamePageState extends State<EndGamePage> {
   late StreamSubscription<GamepadEvent> _gamepadSubscription;
   late GamepadNavigator _gamepadNavigator;
 
+  bool isScavengerHunt = true;
   bool updatingFirebase = true;
   bool receivedTopPlayers = false;
   bool minDurationElapsed = false;
@@ -172,7 +173,7 @@ class _EndGamePageState extends State<EndGamePage> {
                   ),
             ],
           ),
-          if (topPlayers.isNotEmpty) ...[
+          if (isScavengerHunt && topPlayers.isNotEmpty) ...[
             Text(
               'Congratulations, the following players have received\n'
               'an achievement and can scan the QR code with the F3 app!',
