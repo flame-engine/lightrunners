@@ -267,6 +267,13 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
 
     _gamepadSubscription = Gamepads.events.listen((GamepadEvent event) {
       setState(() {
+        final isYaxis = leftYAxis.matches(event) || rightYAxis.matches(event);
+        final isRight =
+            (leftXAxis.matches(event) || rightXAxis.matches(event)) &&
+                event.value > 30000;
+        final isLeft =
+            (leftXAxis.matches(event) || rightXAxis.matches(event)) &&
+                event.value < -30000;
         if (event.gamepadId == widget.gamepadId) {
           if (_selectedPlayerMode == false) {
             if (aButton.matches(event)) {
@@ -277,12 +284,12 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
               widget.onPlayerIdentified(widget.slotNumber, null);
             }
           } else {
-            if (leftYAxis.matches(event) || rightYAxis.matches(event)) {
+            if (isYaxis) {
               final delta = event.value.sign.toInt() * -1;
               if ((_lastChange != null &&
                       event.timestamp - _lastChange! < 200 &&
                       delta == _lastDirection) ||
-                  event.value.abs() < 1000) {
+                  event.value.abs() < 5000) {
                 return;
               }
               _lastChange = event.timestamp;
@@ -298,12 +305,14 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
                   '$newDigit',
                 );
               });
-            } else if (r1Bumper.matches(event) && event.value > 30000) {
+            } else if (isRight ||
+                (r1Bumper.matches(event) && event.value > 30000)) {
               // Move the cursor to the next digit if R1 is fully pressed
               setState(() {
                 _cursor = (_cursor + 1) % _playerId.characters.length;
               });
-            } else if (l1Bumper.matches(event) && event.value > 30000) {
+            } else if (isLeft ||
+                (l1Bumper.matches(event) && event.value > 30000)) {
               // Move the cursor to the previous digit if L1 is fully pressed
               setState(() {
                 _cursor = (_cursor - 1) % _playerId.characters.length;
