@@ -96,7 +96,7 @@ class Scores {
               'playerId',
               whereIn: playerIds.map((i) => i.toString()).toList(),
             )
-            .where('score', isGreaterThanOrEqualTo: 1)
+            .where('score', isGreaterThanOrEqualTo: 10)
             .get())
         .map(Score.fromDocument)
         .toList();
