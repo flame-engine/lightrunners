@@ -275,7 +275,8 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
               widget.onPlayerIdentified(widget.slotNumber, null);
             }
           } else {
-            if (aButton.matches(event) || bButton.matches(event)) {
+            if (leftYAxis.matches(event) || rightYAxis.matches(event)) {
+              print(event.value);
               final delta = aButton.matches(event) ? 1 : -1;
               // Increment current digit
               final digit =
