@@ -276,8 +276,8 @@ class _PlayerIdentificationState extends State<PlayerIdentification> {
             }
           } else {
             if (leftYAxis.matches(event) || rightYAxis.matches(event)) {
-              print(event.value);
-              final delta = aButton.matches(event) ? 1 : -1;
+              print(event.type.name);
+              final delta = event.value.sign;
               // Increment current digit
               final digit =
                   int.parse(_playerId.substring(_cursor, _cursor + 1));
