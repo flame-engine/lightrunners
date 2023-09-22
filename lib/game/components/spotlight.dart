@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
 import 'package:flame/palette.dart';
 import 'package:lightrunners/game/components/ship.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';

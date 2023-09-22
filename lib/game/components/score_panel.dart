@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flame/components.dart';
-import 'package:flame/experimental.dart';
 import 'package:lightrunners/game/components/score_box.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
 import 'package:lightrunners/ui/palette.dart';

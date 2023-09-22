@@ -20,25 +20,22 @@ class LightRunnersGame extends FlameGame
   final List<Player> players;
   late final Rect playArea;
   late final CameraComponent cameraComponent;
-  late final World world;
   late final Map<String, Ship> ships;
 
   StreamSubscription<GamepadEvent>? _subscription;
   final void Function(Map<Player, int>) onEndGame;
 
-  LightRunnersGame({required this.players, required this.onEndGame});
+  LightRunnersGame({required this.players, required this.onEndGame})
+      : super(
+          camera: CameraComponent.withFixedResolution(
+            width: fixedSize.x,
+            height: fixedSize.y,
+          ),
+        );
 
   @override
   Future<void> onLoad() async {
     _createShips();
-    world = World();
-
-    cameraComponent = CameraComponent.withFixedResolution(
-      world: world,
-      width: fixedSize.x,
-      height: fixedSize.y,
-    );
-    add(cameraComponent);
 
     playArea = Rect.fromLTWH(
       screenMargin - fixedSize.x / 2,
@@ -49,7 +46,6 @@ class LightRunnersGame extends FlameGame
     cameraComponent.viewport.add(ScorePanel());
     world.addAll([Background(), GameBorder()]);
     world.addAll([Spotlight(), ...ships.values]);
-    add(world);
 
     late final CountDown countDown;
     add(
