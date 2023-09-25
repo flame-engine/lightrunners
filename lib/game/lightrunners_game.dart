@@ -19,7 +19,6 @@ class LightRunnersGame extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
   final List<Player> players;
   late final Rect playArea;
-  late final CameraComponent cameraComponent;
   late final Map<String, Ship> ships;
 
   StreamSubscription<GamepadEvent>? _subscription;
@@ -43,7 +42,7 @@ class LightRunnersGame extends FlameGame
       fixedSize.x - 2 * screenMargin - scoreBoxWidth - 2 * scoreBoxMargin,
       fixedSize.y - 2 * screenMargin,
     );
-    cameraComponent.viewport.add(ScorePanel());
+    camera.viewport.add(ScorePanel());
     world.addAll([Background(), GameBorder()]);
     world.addAll([Spotlight(), ...ships.values]);
 

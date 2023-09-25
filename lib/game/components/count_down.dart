@@ -4,7 +4,7 @@ import 'package:flutter/painting.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lightrunners/ui/ui.dart';
 
-const _matchLength = 4.0;
+const _matchLength = 60.0;
 const _radius = Radius.circular(3.0);
 
 class CountDown extends PositionComponent {
