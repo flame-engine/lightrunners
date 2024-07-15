@@ -11,8 +11,9 @@ class ScorePanel extends RectangleComponent
     with HasGameReference<LightRunnersGame> {
   @override
   void onLoad() {
-    position = Vector2(fixedSize.x - scoreBoxWidth, 0) - fixedSize / 2;
-    size = Vector2(scoreBoxWidth, fixedSize.y);
+    final left = fixedSize.x - scoreBoxWidth - 2 * scoreBoxMargin;
+    position = Vector2(left, screenMargin) - fixedSize / 2;
+    size = Vector2(scoreBoxWidth, fixedSize.y - screenMargin * 2);
     paint = Paint()..color = GamePalette.black;
     addAll(
       game.ships.values.map(

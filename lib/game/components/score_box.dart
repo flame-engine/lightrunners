@@ -43,7 +43,7 @@ class ScoreBox extends PositionComponent
   void onLoad() {
     final availableHeight = game.size.y - 2 * screenMargin;
     size = Vector2(scoreBoxWidth, availableHeight / maxShips - scoreBoxMargin);
-    rRect = RRect.fromRectAndRadius(Vector2.zero() & size, _radius);
+    rRect = RRect.fromRectAndRadius(Vector2(scoreBoxMargin, 0) & size, _radius);
   }
 
   @override
