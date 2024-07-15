@@ -8,11 +8,11 @@ environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
-  collection: ^1.17.0
+  collection: ^1.18.0
   firebase_admin: ^0.2.0
-  firedart: ^0.9.7
+  firedart: ^0.9.8
   flame: ^1.18.0
-  flame_audio: ^2.1.0
+  flame_audio: ^2.10.2
   flutter:
     sdk: flutter
   flutter_shaders: ^0.1.2
@@ -22,8 +22,8 @@ dependencies:
   vector_math: ^2.1.4
 
 dev_dependencies:
-  flame_lint: ^1.1.1
-  flame_test: ^1.13.0
+  flame_lint: ^1.2.0
+  flame_test: ^1.16.2
   flutter_test:
     sdk: flutter
   integration_test:
