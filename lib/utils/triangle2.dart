@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
@@ -89,7 +88,7 @@ class Triangle2 {
   }
 
   Circle circumcircle() {
-    return _circleFromPoints(vertices)!;
+    return Circle.fromPoints(v1, v2, v3)!;
   }
 
   Triangle2 translateBy(Vector2 offset) {
@@ -102,25 +101,4 @@ class Triangle2 {
   String toString() {
     return 'Triangle2(vertices: $vertices)';
   }
-}
-
-// TODO(luan): add to Flame: Circle.fromPoints
-Circle? _circleFromPoints(List<Vector2> points) {
-  final p1 = points[0];
-  final p2 = points[1];
-  final p3 = points[2];
-
-  final offset = pow(p2.x, 2) + pow(p2.y, 2);
-  final bc = (pow(p1.x, 2) + pow(p1.y, 2) - offset) / 2.0;
-  final cd = (offset - pow(p3.x, 2) - pow(p3.y, 2)) / 2.0;
-  final det = (p1.x - p2.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p2.y);
-  if (det == 0) {
-    return null;
-  }
-
-  final centerX = (bc * (p2.y - p3.y) - cd * (p1.y - p2.y)) / det;
-  final centerY = (cd * (p1.x - p2.x) - bc * (p2.x - p3.x)) / det;
-  final radius = sqrt(pow(p2.x - centerX, 2) + pow(p2.y - centerY, 2));
-
-  return Circle(Vector2(centerX, centerY), radius);
 }

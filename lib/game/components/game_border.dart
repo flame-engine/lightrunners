@@ -34,10 +34,10 @@ class GameBorder extends PositionComponent
 
     position = game.playArea.topLeft.toVector2();
     size = game.playArea.size.toVector2();
-    rRect = RRect.fromRectAndRadius(Vector2.zero() & size, _radius);
 
-    clipArea = game.playArea.inflate(200.0).toFlameRectangle();
-    clipAreaCenter = clipArea.center;
+    final rect = Vector2.zero() & size;
+    rRect = RRect.fromRectAndRadius(rect, _radius);
+    clipArea = rect.toFlameRectangle();
   }
 
   @override
@@ -54,9 +54,7 @@ class GameBorder extends PositionComponent
 
     for (final (color, path) in _generateBorderClips(clipArea)) {
       canvas.save();
-      canvas.translateVector(clipAreaCenter);
       canvas.clipPath(path);
-      canvas.translateVector(-clipAreaCenter);
       canvas.drawRRect(rRect, paint..color = color);
       canvas.restore();
     }
@@ -91,7 +89,11 @@ class GameBorder extends PositionComponent
         .toList();
   }
 
-  Path _generateClipPath(double alpha1, double alpha2, Rectangle clipArea) {
+  static Path _generateClipPath(
+    double alpha1,
+    double alpha2,
+    Rectangle clipArea,
+  ) {
     final cornerAngle = atan(clipArea.height / clipArea.width);
     final cornerAngles = [
       cornerAngle,
@@ -116,10 +118,18 @@ class GameBorder extends PositionComponent
     final points = angles
         .map((e) => Vector2(cos(e), sin(e))..scale(clipLength))
         .map((e) => LineSegment(Vector2.zero(), e))
+        .map((e) => e.translate(clipArea.center))
         .map((e) => clipArea.intersections(e).firstOrNull)
         .nonNulls
         .map((e) => e.toOffset())
         .toList();
-    return Path()..addPolygon([Offset.zero, ...points], true);
+    final center = clipArea.center.toOffset();
+    return Path()..addPolygon([center, ...points], true);
+  }
+}
+
+extension on LineSegment {
+  LineSegment translate(Vector2 delta) {
+    return LineSegment(from + delta, to + delta);
   }
 }

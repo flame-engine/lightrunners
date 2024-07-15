@@ -1,5 +1,5 @@
 name: lightrunners
-description: A simple Flame game.
+description: Lightrunners is a local multiplayer "King of the Hill"-style game built for FlutterCon 2023.
 version: 0.1.0
 
 publish_to: 'none'
@@ -11,12 +11,12 @@ dependencies:
   collection: ^1.17.0
   firebase_admin: ^0.2.0
   firedart: ^0.9.7
-  flame: ^1.9.0
+  flame: ^1.18.0
   flame_audio: ^2.1.0
   flutter:
     sdk: flutter
   flutter_shaders: ^0.1.2
-  gamepads: ^0.1.1
+  gamepads: ^0.1.2
   google_fonts: ^4.0.4
   phased: ^0.0.3
   vector_math: ^2.1.4
