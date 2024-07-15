@@ -11,7 +11,7 @@ void main() async {
   Scores.init();
   runApp(
     CRTShader(
-      enabled: false,
+      enabled: true,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: const TitlePage(),
