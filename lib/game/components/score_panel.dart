@@ -5,13 +5,14 @@ import 'package:lightrunners/game/components/score_box.dart';
 import 'package:lightrunners/game/lightrunners_game.dart';
 import 'package:lightrunners/ui/palette.dart';
 import 'package:lightrunners/utils/constants.dart';
+import 'package:lightrunners/utils/utils.dart';
 
 class ScorePanel extends RectangleComponent
     with HasGameReference<LightRunnersGame> {
   @override
   void onLoad() {
-    position = Vector2(game.camera.viewport.size.x - scoreBoxWidth, 0);
-    size = Vector2(scoreBoxWidth, game.camera.viewport.size.y);
+    position = Vector2(fixedSize.x - scoreBoxWidth, 0) - fixedSize / 2;
+    size = Vector2(scoreBoxWidth, fixedSize.y);
     paint = Paint()..color = GamePalette.black;
     addAll(
       game.ships.values.map(

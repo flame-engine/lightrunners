@@ -31,7 +31,7 @@ class GamepadJoystick {
 }
 
 bool readArrowLikeKeysIntoVector2(
-  RawKeyEvent event,
+  KeyEvent event,
   Set<LogicalKeyboardKey> keysPressed,
   Vector2 vector, {
   required LogicalKeyboardKey up,
@@ -39,7 +39,7 @@ bool readArrowLikeKeysIntoVector2(
   required LogicalKeyboardKey left,
   required LogicalKeyboardKey right,
 }) {
-  final isDown = event is RawKeyDownEvent;
+  final isDown = event is KeyDownEvent;
   if (event.logicalKey == up) {
     if (isDown) {
       vector.y = -1;
@@ -78,4 +78,10 @@ bool readArrowLikeKeysIntoVector2(
     return false;
   }
   return true;
+}
+
+extension IsKeyPressed on KeyEvent {
+  bool isKeyPressed(LogicalKeyboardKey logicalKey) {
+    return this is KeyDownEvent && this.logicalKey == logicalKey;
+  }
 }

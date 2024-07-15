@@ -141,7 +141,7 @@ class Ship extends SpriteComponent
 
   @override
   bool onKeyEvent(
-    RawKeyEvent event,
+    KeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
     final keyboardControl = playerKeyboardControlsMapping[player.slotNumber];

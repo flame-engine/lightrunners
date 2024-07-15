@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:gamepads/gamepads.dart';
@@ -24,9 +25,12 @@ class LightRunnersGame extends FlameGame
   StreamSubscription<GamepadEvent>? _subscription;
   final void Function(Map<Player, int>) onEndGame;
 
-  LightRunnersGame({required this.players, required this.onEndGame})
-      : super(
+  LightRunnersGame({
+    required this.players,
+    required this.onEndGame,
+  }) : super(
           camera: CameraComponent.withFixedResolution(
+            world: World(),
             width: fixedSize.x,
             height: fixedSize.y,
           ),
@@ -42,9 +46,14 @@ class LightRunnersGame extends FlameGame
       fixedSize.x - 2 * screenMargin - scoreBoxWidth - 2 * scoreBoxMargin,
       fixedSize.y - 2 * screenMargin,
     );
-    camera.viewport.add(ScorePanel());
-    world.addAll([Background(), GameBorder()]);
-    world.addAll([Spotlight(), ...ships.values]);
+
+    world.addAll([
+      Background(),
+      GameBorder(),
+      Spotlight(),
+      ...ships.values,
+      ScorePanel(),
+    ]);
 
     late final CountDown countDown;
     add(

@@ -9,6 +9,7 @@ import 'package:lightrunners/game/view/game_page.dart';
 import 'package:lightrunners/title/view/title_page.dart';
 import 'package:lightrunners/ui/palette.dart';
 import 'package:lightrunners/utils/gamepad_map.dart';
+import 'package:lightrunners/utils/input_handler_utils.dart';
 import 'package:lightrunners/widgets/screen_scaffold.dart';
 
 class LobbyPage extends StatefulWidget {
@@ -73,9 +74,9 @@ class _LobbyPageState extends State<LobbyPage> {
       fontWeight: FontWeight.bold,
     );
 
-    return RawKeyboardListener(
+    return KeyboardListener(
       focusNode: _focusNode,
-      onKey: (RawKeyEvent event) {
+      onKeyEvent: (KeyEvent event) {
         if (event.isKeyPressed(LogicalKeyboardKey.space)) {
           setState(() {
             _players.add(Player(slotNumber: _players.length));
