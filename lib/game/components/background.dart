@@ -8,12 +8,13 @@ import 'package:lightrunners/game/lightrunners_game.dart';
 import 'package:lightrunners/ui/palette.dart';
 import 'package:lightrunners/utils/delaunay.dart';
 import 'package:lightrunners/utils/flame_utils.dart';
+import 'package:lightrunners/utils/mutable_color.dart';
 
 const _margin = 200.0;
 
 const _numberShades = 5;
 const _shadeStep = 0.1;
-const _colorMoveSpeed = 30;
+const _colorMoveSpeed = 0.8;
 final _emptyColor = GamePalette.black.brighten(0.1);
 final _borderPaint = Paint()
   ..color = GamePalette.black
@@ -33,7 +34,7 @@ class Background extends PositionComponent
   late Rect clipArea;
   late List<ShadedTriangle> mesh;
 
-  Color currentColor = _emptyColor;
+  MutableColor currentColor = MutableColor.fromColor(_emptyColor);
 
   @override
   void onGameResize(Vector2 gameSize) {
@@ -72,8 +73,7 @@ class Background extends PositionComponent
     super.update(dt);
 
     final targetColor = _computeTargetColor();
-    currentColor =
-        _moveTowards(currentColor, targetColor, _colorMoveSpeed * dt);
+    currentColor.moveTowards(targetColor, _colorMoveSpeed * dt);
   }
 
   @override
@@ -82,7 +82,8 @@ class Background extends PositionComponent
     canvas.clipRect(clipArea);
 
     for (final t in mesh) {
-      final shadedColor = currentColor.brighten(t.shadeLevel * _shadeStep);
+      final shadedColor =
+          currentColor.toColor().brighten(t.shadeLevel * _shadeStep);
       canvas.drawPath(t.path, paint..color = shadedColor);
     }
 
@@ -91,60 +92,19 @@ class Background extends PositionComponent
     }
   }
 
-  (int, int, int) _computeTargetColor() {
+  MutableColor _computeTargetColor() {
     final sortedShips = game.ships.values.sortedBy<num>((ship) => -ship.score);
     final maxScore = sortedShips.first.score;
     if (maxScore == 0) {
-      return _fromColor(_emptyColor);
+      return MutableColor.fromColor(_emptyColor);
     }
     final colors = sortedShips
         .takeWhile((ship) => ship.score == maxScore)
         .map((ship) => ship.paint.color.darken(0.75))
         .toList();
-    return colors.map(_fromColor).reduce((value, element) => value + element) /
+    return colors
+            .map(MutableColor.fromColor)
+            .reduce((value, element) => value + element) /
         colors.length.toDouble();
   }
-
-  Color _moveTowards(Color currentColor, (int, int, int) target, double ds) {
-    final color = _fromColor(currentColor);
-    if (color == target) {
-      return currentColor;
-    }
-    return color.moveTowards(target, ds).toColor();
-  }
 }
-
-extension on (int, int, int) {
-  Color toColor() => Color.fromARGB(255, $1, $2, $3);
-
-  (int, int, int) operator +((int, int, int) other) =>
-      (this.$1 + other.$1, this.$2 + other.$2, this.$3 + other.$3);
-
-  (int, int, int) operator -((int, int, int) other) => this + (-other);
-
-  (int, int, int) operator /(double other) =>
-      _fromDoubles(this.$1 / other, this.$2 / other, this.$3 / other);
-
-  (int, int, int) operator *(double other) =>
-      _fromDoubles(this.$1 * other, this.$2 * other, this.$3 * other);
-
-  (int, int, int) operator -() => (-this.$1, -this.$2, -this.$3);
-
-  double get length => sqrt($1 * $1 + $2 * $2 + $3 * $3);
-
-  (int, int, int) normalized() => this / length;
-
-  (int, int, int) moveTowards((int, int, int) target, double ds) {
-    final diff = target - this;
-    if (diff.length < ds) {
-      return target;
-    } else {
-      return this + diff.normalized() * ds;
-    }
-  }
-}
-
-(int, int, int) _fromDoubles(double r, double g, double b) =>
-    (r.round(), g.round(), b.round());
-
-(int, int, int) _fromColor(Color color) => (color.red, color.green, color.blue);
